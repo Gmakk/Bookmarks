@@ -42,36 +42,6 @@ public class BookmarksReplaceWithText {
 
     private static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
 
-/*
-    public static void main(String[] args) throws Exception {
-
-        Map<DataFieldName, String> map = new HashMap<DataFieldName, String>();
-        map.put( new DataFieldName("bm1"), "whale shark");
-
-
-        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage
-                .load(new java.io.File(System.getProperty("user.dir")
-                        + "/bm1.docx"));
-        MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
-
-        // Before..
-        // System.out.println(XmlUtils.marshaltoString(documentPart.getJaxbElement(), true, true));
-
-        org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) documentPart
-                .getJaxbElement();
-        Body body = wmlDocumentEl.getBody();
-
-        BookmarksReplaceWithText bti = new BookmarksReplaceWithText();
-
-        bti.replaceBookmarkContents(body.getContent(), map);
-
-        // After
-        // System.out.println(XmlUtils.marshaltoString(documentPart.getJaxbElement(), true, true));
-
-        // save the docx...
-        wordMLPackage.save(new java.io.File(System.getProperty("user.dir") + "/OUT_BookmarksTextInserter.docx"));
-    }
-*/
 
     public static void replaceBookmarkContents(List<Object> paragraphs,  Map<DataFieldName, String> data) throws Exception {
 
