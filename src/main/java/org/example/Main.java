@@ -57,11 +57,11 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
-        BasicConfigurator.configure();
-        Logger logger = Logger.getLogger("main");
+        //BasicConfigurator.configure();
 
         Map<DataFieldName, String> map = new HashMap<DataFieldName, String>();
-        map.put( new DataFieldName("DOCX"), "whale shark");
+        map.put( new DataFieldName("paragraph2"), "whale shark");
+        map.put( new DataFieldName("DOCX"), "whale shark");//TODO: пустые закладки
 
         // Открываем документ
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(pathToFiles + "templates"+ System.getProperty("file.separator") +"template.docx"));
@@ -70,12 +70,12 @@ public class Main {
         MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();
 
         //содержимое главной части
-        //List<Object> content = mainDocumentPart.getContent();
+        //List<Object> content = mainDocumentPart.getContent();//????????
 
         // Before..
         //System.out.println(XmlUtils.marshaltoString(mainDocumentPart.getJaxbElement(), true, true));
 
-        org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) mainDocumentPart.getJaxbElement();
+        org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) mainDocumentPart.getJaxbElement();//????????
         Body body = wmlDocumentEl.getBody();
 
         BookmarksReplaceWithText bti = new BookmarksReplaceWithText();

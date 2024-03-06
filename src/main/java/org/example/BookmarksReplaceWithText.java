@@ -45,7 +45,7 @@ public class BookmarksReplaceWithText {
 
     public static void replaceBookmarkContents(List<Object> paragraphs,  Map<DataFieldName, String> data) throws Exception {
 
-        RangeFinder rt = new RangeFinder("CTBookmark", "CTMarkupRange");
+        RangeFinder rt = new RangeFinder();
         new TraversalUtil(paragraphs, rt);
 
         for (CTBookmark bm : rt.getStarts()) {
