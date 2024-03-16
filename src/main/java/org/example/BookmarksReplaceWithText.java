@@ -81,7 +81,12 @@ public class BookmarksReplaceWithText {
                         if (DELETE_BOOKMARK) {
                             rangeEnd=i;
                         } else {
-                            rangeEnd=i-1;
+                            //для непустых закладок
+                            if(i > rangeStart)
+                                rangeEnd=i-1;
+                            //для пустых закладок
+                            if(i == rangeStart)
+                                rangeEnd=i;
                         }
                         break;
                     }
