@@ -50,6 +50,13 @@ public class BookmarksReplaceWithText {
 
         for (CTBookmark bm : rt.getStarts()) {
 
+            log.info(bm.getName());
+            log.info("getColFirst" + bm.getColFirst());
+            log.info("getColLast" + bm.getColLast());
+
+//            System.out.println(bm.getName() + "\n");
+//            System.out.println("getColFirst" + bm.getColFirst() + "\n");
+//            System.out.println("getColLast" + bm.getColLast());
             // do we have data for this one?
             if (bm.getName()==null) continue;
             String value = data.get(new DataFieldName(bm.getName()));
@@ -102,6 +109,7 @@ public class BookmarksReplaceWithText {
                 for (int j =rangeEnd; j>=rangeStart; j--) {
                     Object obj = XmlUtils.unwrap(theList.get(j));
 
+                    //при закладке без размера, может находить сам себя
                     if (obj instanceof CTBookmark)  // We found the start of an overlapping bookmark
                     {
                         log.warn("Overlapping bookmarks detected: " + bm.getName() + " and " + ((CTBookmark)obj).getName());

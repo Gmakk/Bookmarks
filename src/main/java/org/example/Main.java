@@ -62,7 +62,7 @@ public class Main {
         Map<DataFieldName, String> map = new HashMap<DataFieldName, String>();
         map.put( new DataFieldName("paragraph1"), "parChange1");
         map.put( new DataFieldName("paragraph2"), "parChange2");
-        map.put( new DataFieldName("DOCX"), "whale shark");//TODO: пустые закладки
+        map.put( new DataFieldName("DOCX"), "whale shark");
 
         // Открываем документ
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(pathToFiles + "templates"+ System.getProperty("file.separator") +"template.docx"));
