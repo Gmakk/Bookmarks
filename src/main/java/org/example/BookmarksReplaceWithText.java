@@ -11,11 +11,7 @@ import org.docx4j.jaxb.Context;
 import org.docx4j.model.fields.merge.DataFieldName;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
-import org.docx4j.wml.Body;
-import org.docx4j.wml.CTBookmark;
-import org.docx4j.wml.CTMarkupRange;
-import org.docx4j.wml.ContentAccessor;
-import org.docx4j.wml.P;
+import org.docx4j.wml.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +39,11 @@ public class BookmarksReplaceWithText {
     private static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
 
 
+    /**
+     * Метод для подстановки значений на место закладок
+     * @param paragraphs список параграфов документа
+     * @param data  значения имя_закладки - строка_подстановки
+     */
     public static void replaceBookmarkContents(List<Object> paragraphs,  Map<DataFieldName, String> data) throws Exception {
 
         RangeFinder rt = new RangeFinder();
@@ -50,9 +51,7 @@ public class BookmarksReplaceWithText {
 
         for (CTBookmark bm : rt.getStarts()) {
 
-            log.info(bm.getName());
-            log.info("getColFirst" + bm.getColFirst());
-            log.info("getColLast" + bm.getColLast());
+            //log.info(bm.getName());
 
 //            System.out.println(bm.getName() + "\n");
 //            System.out.println("getColFirst" + bm.getColFirst() + "\n");
@@ -72,11 +71,17 @@ public class BookmarksReplaceWithText {
                 continue;
             }
 
+            String formula = null;
             int rangeStart = -1;
             int rangeEnd=-1;
             int i = 0;
             for (Object ox : theList) {
                 Object listEntry = XmlUtils.unwrap(ox);
+                //если нашли невидимый run, то достаем строку с формулой из него
+                if (listEntry instanceof R && ((R) listEntry).getRPr() != null &&
+                        ((R) listEntry).getRPr().getVanish() != null && ((R) listEntry).getRPr().getVanish().isVal()) {
+                    formula = ((Text)(((R) listEntry).getContent().get(0))).getValue();
+                }
                 if (listEntry.equals(bm)) {
                     if (DELETE_BOOKMARK) {
                         rangeStart=i;
@@ -125,6 +130,10 @@ public class BookmarksReplaceWithText {
                     }
                 }
 
+                //TODO: получить значение из бд по формуле
+                if(formula != null)
+                    log.info(formula);
+
                 // now add a run, replacing newline characters with BR tags
                 org.docx4j.wml.R  run      = factory.createR();
                 String[]          lines    = value.split("\n");
@@ -155,9 +164,5 @@ public class BookmarksReplaceWithText {
                 log.warn("Bookmark " + bm.getName() + " doesn't appear to be valid; rangeStart=" + rangeStart + ", rangeEnd=" + rangeEnd + ". Probable cause: overlapping bookmarks.");
             }
         }
-
-
     }
-
-
 }

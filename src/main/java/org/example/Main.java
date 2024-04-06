@@ -59,10 +59,17 @@ public class Main {
     public static void main(String[] args) throws Exception {
         //BasicConfigurator.configure();
 
-        Map<DataFieldName, String> map = new HashMap<DataFieldName, String>();
-        map.put( new DataFieldName("paragraph1"), "parChange1");
-        map.put( new DataFieldName("paragraph2"), "parChange2");
-        map.put( new DataFieldName("DOCX"), "whale shark");
+        Map<DataFieldName, String> replaceMap = new HashMap<DataFieldName, String>();
+        replaceMap.put( new DataFieldName("paragraph1"), "parChange1");
+        replaceMap.put( new DataFieldName("paragraph2"), "parChange2");
+        replaceMap.put( new DataFieldName("DOCX"), "whale shark");
+//        replaceMap.put( new DataFieldName("SeveralPar"), "shark whale");
+
+        Map<DataFieldName, String> alterMap = new HashMap<DataFieldName, String>();
+        alterMap.put( new DataFieldName("paragraph1"), "test4");
+        alterMap.put( new DataFieldName("paragraph2"), "test5");
+        alterMap.put( new DataFieldName("DOCX"), "test6");
+//        alterMap.put( new DataFieldName("SeveralPar"), "test4");
 
         // Открываем документ
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(pathToFiles + "templates"+ System.getProperty("file.separator") +"template.docx"));
@@ -79,9 +86,11 @@ public class Main {
         org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) mainDocumentPart.getJaxbElement();//????????
         Body body = wmlDocumentEl.getBody();
 
-        BookmarksReplaceWithText bti = new BookmarksReplaceWithText();
+        //добавление формулы в невидимый элемент
+        BookmarksAlterWithFormula.alterBookmarkContent(body.getContent(), alterMap);
 
-        bti.replaceBookmarkContents(body.getContent(), map);
+        //замена текста закладки
+        BookmarksReplaceWithText.replaceBookmarkContents(body.getContent(), replaceMap);
 
         // After
         //System.out.println(XmlUtils.marshaltoString(mainDocumentPart.getJaxbElement(), true, true));
