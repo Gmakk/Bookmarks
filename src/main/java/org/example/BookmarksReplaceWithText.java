@@ -1,5 +1,6 @@
 package org.example;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.docx4j.model.fields.merge.DataFieldName;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.*;
+import org.example.formula.FormulaParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,17 +53,11 @@ public class BookmarksReplaceWithText {
 
         for (CTBookmark bm : rt.getStarts()) {
 
-            //log.info(bm.getName());
-
-//            System.out.println(bm.getName() + "\n");
-//            System.out.println("getColFirst" + bm.getColFirst() + "\n");
-//            System.out.println("getColLast" + bm.getColLast());
             // do we have data for this one?
             if (bm.getName()==null) continue;
             String value = data.get(new DataFieldName(bm.getName()));
             if (value==null) continue;
 
-//            try {
             // Can't just remove the object from the parent,
             // since in the parent, it may be wrapped in a JAXBElement
             List<Object> theList = null;
@@ -132,37 +128,66 @@ public class BookmarksReplaceWithText {
 
                 //TODO: получить значение из бд по формуле
                 if(formula != null)
-                    log.info(formula);
+                    log.info("formula" + formula + "" );
+
+                FormulaParser parser = new FormulaParser();
+                parser.parse(formula);
 
                 // now add a run, replacing newline characters with BR tags
-                org.docx4j.wml.R  run      = factory.createR();
-                String[]          lines    = value.split("\n");
-                String            lastLine = lines[lines.length - 1];
-
-                for (final String line : lines)
-                {
-                    org.docx4j.wml.Text  t = factory.createText();
-                    run.getContent().add(t);
-                    t.setValue(line);
-
-                    if (!line.equals(lastLine))
-                    {
-                        org.docx4j.wml.Br br = factory.createBr();
-                        run.getContent().add(br);
-                    }
-                }
-
-                theList.add(insertIndex, run);
-//                    theList.add(rangeStart, run);
-
-//            } catch (ClassCastException cce) {
-//                log.error(cce.getMessage(), cce);
-//            }
+                theList.add(insertIndex, createSubstitutionRun(formula,value));
             }
             else
             {
                 log.warn("Bookmark " + bm.getName() + " doesn't appear to be valid; rangeStart=" + rangeStart + ", rangeEnd=" + rangeEnd + ". Probable cause: overlapping bookmarks.");
             }
         }
+    }
+
+    /**
+     * Метод по заданной формуле создает элемент для подстановки в документ
+     * @param formula формула с правилами формирования элемента
+     * @param value текст, содержащийся в элементе
+     * @return созданный элемент
+     */
+    private static R createSubstitutionRun(String formula, String value){
+        org.docx4j.wml.R run = factory.createR();
+        RPr rPr = factory.createRPr();
+        RFonts fonts = factory.createRFonts();
+        HpsMeasure hpsmeasure = factory.createHpsMeasure();//нужно для задания размера шрифта
+        String[] lines = value.split("\n");
+        String lastLine = lines[lines.length - 1];
+
+        for (final String line : lines)
+        {
+            org.docx4j.wml.Text  t = factory.createText();
+            run.getContent().add(t);
+            t.setValue(line);
+
+            if (!line.equals(lastLine))
+            {
+                org.docx4j.wml.Br br = factory.createBr();
+                run.getContent().add(br);
+            }
+        }
+
+        //устанавливаем шрифт
+        fonts.setAscii("Arial");
+        fonts.setHAnsi("Arial");
+        fonts.setCs("Arial");
+        run.setRPr(rPr);
+        rPr.setRFonts(fonts);
+        //устанавливаем размер шрифта
+        hpsmeasure.setVal(BigInteger.valueOf(30*2));
+        rPr.setSz(hpsmeasure);
+        //устанавливаем жирный и курсивный текст
+        rPr.setB(new BooleanDefaultTrue());//жирный
+        rPr.setI(new BooleanDefaultTrue());//курсив
+        //TODO: устанавливать стиль вышестоящему параграфу? Подтягивать возможные стили из /word/styles.xml?
+//        //устанавливаем стиль заголовка
+//        PPrBase.PStyle style = pPr.getPStyle();
+//        style.setVal("1"); || style.setVal("11") || style.setVal("a0");
+
+
+        return run;
     }
 }
