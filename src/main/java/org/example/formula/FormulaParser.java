@@ -34,6 +34,8 @@ public class FormulaParser extends Formula{
         //удаляем первое поле, тк там хранится разделяющий элемент который уже задан
         fields.remove(0);
         //тк параметры в формуле находятся в то же порядке, что и поля, то присваиваем i-тому полю значение i-того параметра
+        //TODO:СНАЧАЛА ПРОВЕРИТЬ НА DATABASE#OLD А ПОТОМ РАЗБИВАТЬ НА ПОЛЯ
+
         for(int i=0;i<params.length;i++){
             if(params[i].equals("true") || params[i].equals("false"))
                 fields.get(i).set(this,Boolean.valueOf(params[i]));
