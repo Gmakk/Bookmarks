@@ -1,14 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.UI.MainSceneController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
+   <children>
+      <TabPane id="tabPane" layoutX="37.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab text="Настройка закладки">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="bookmarksListComboBox" layoutX="76.0" layoutY="122.0" prefWidth="150.0" />
+                        <Label layoutX="242.0" layoutY="126.0" text="Выберите закладку из списка" />
+                        <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="15.0" prefWidth="56.0" visible="false" />
+                        <Button fx:id="chooseDocButton" layoutX="76.0" layoutY="17.0" mnemonicParsing="false" onAction="#chooseDocButtonPressed" text="Выбрать документ" />
+                        <Button layoutX="76.0" layoutY="67.0" mnemonicParsing="false" onAction="#showDocBookmarksButtonPressed" text="Отобразить закладки документа" />
+                        <Button layoutX="416.0" layoutY="299.0" mnemonicParsing="false" text="Заполнить документ" />
+                        <Label layoutX="41.0" layoutY="14.0" text="1">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="41.0" layoutY="65.0" text="2">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="41.0" layoutY="120.0" text="3">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="41.0" layoutY="178.0" text="4">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="381.0" layoutY="296.0" text="6" textFill="RED">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="76.0" layoutY="173.0" prefHeight="39.0" prefWidth="180.0" text="Заполните данные во вкладках или оставьте старые" wrapText="true" />
+                        <Label layoutX="41.0" layoutY="235.0" text="5">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="76.0" layoutY="238.0" mnemonicParsing="false" text="Добавить формулу к закладке" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="База данных">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+            <Tab text="Стилизация">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                </content>
+            </Tab>
+            <Tab text="Форматирование">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                </content>
+            </Tab>
+            <Tab text="Шрифт">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
 </AnchorPane>

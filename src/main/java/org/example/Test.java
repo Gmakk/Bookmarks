@@ -1,24 +1,32 @@
 package org.example;
 
+import org.docx4j.TraversalUtil;
+import org.docx4j.finders.RangeFinder;
 import org.docx4j.model.fields.merge.DataFieldName;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Body;
+import org.docx4j.wml.CTBookmark;
 import org.example.formula.FormulaCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Test {
     protected static Logger log = LoggerFactory.getLogger(Test.class);
 
-    public static String pathToFiles = System.getProperty("user.dir") + System.getProperty("file.separator") + "src"
+    private static String pathToFiles = System.getProperty("user.dir") + System.getProperty("file.separator") + "src"
             + System.getProperty("file.separator") + "main" + System.getProperty("file.separator") + "java"
             + System.getProperty("file.separator")+ "org" + System.getProperty("file.separator")
             + "example" + System.getProperty("file.separator");
+
+    private static MainDocumentPart mainDocumentPart;
 
     public void test() throws Exception {
         FormulaCalculator calculator = new FormulaCalculator();
@@ -43,12 +51,12 @@ public class Test {
         replaceMap.put( new DataFieldName("DOCX"), "whale shark");
 
 
-
         // Открываем документ
         WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(pathToFiles + "templates"+ System.getProperty("file.separator") +"template.docx"));
 
         // Получаем главную часть документа
         MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();
+
 
         //содержимое главной части
         //List<Object> content = mainDocumentPart.getContent();//????????
@@ -70,5 +78,27 @@ public class Test {
 
         // save the docx...
         wordMLPackage.save(new File(pathToFiles + "templates"+ System.getProperty("file.separator") +"RESULT.docx"));
+    }
+
+    public static List<String> getBookmarkNames(String filePath) throws Docx4JException {
+        // Открываем документ
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(filePath));
+
+        // Получаем главную часть документа
+        MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();
+
+        org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) mainDocumentPart.getJaxbElement();//????????
+        Body body = wmlDocumentEl.getBody();
+
+        RangeFinder rt = new RangeFinder();
+        new TraversalUtil(body.getContent(), rt);
+
+        List<String> result = new ArrayList<>();
+
+        for (CTBookmark bm : rt.getStarts()){
+            result.add(bm.getName());
+        }
+
+        return result;
     }
 }

@@ -18,6 +18,8 @@ public class BookmarksAlterWithFormula {
 
     private static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
 
+    //TODO: Что будет если уже существует закладка, нужно старую удалить
+
     /**
      * Метод для добавления невидимого run с формулой к закладке
      * run добавляется в родительский для закладки параграф

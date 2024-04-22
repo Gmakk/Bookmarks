@@ -40,6 +40,7 @@ public class BookmarksReplaceWithText {
 
     private static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
 
+    //TODO: При проходе менять только те у коо есть формула
 
     /**
      * Метод для подстановки значений на место закладок

@@ -30,10 +30,11 @@ public class Main extends Application {
         //задаем Stage, в который будут устанавливаться нужные сцены
         SceneManager.setPrimaryStage(primaryStage);
         //включаем первую сцену
-        //SceneManager.setMainScene();
+        SceneManager.setMainScene();
+        primaryStage.show();
     }
 
     public static void main(String[] args) throws Exception {
-
+        Application.launch(args);
     }
 }

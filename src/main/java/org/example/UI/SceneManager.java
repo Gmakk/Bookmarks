@@ -23,6 +23,8 @@ public class SceneManager {
         SceneManager.primaryStage = primaryStage;
     }
 
+    public static Stage getPrimaryStage(){return primaryStage;}
+
     /**
      * Метод устанавливает нужную сцену и загружает ее, если такой еще не было
      * @param name Имя нужной сцены(должно совпадать с соответствующим .fxml файлом)
@@ -46,7 +48,7 @@ public class SceneManager {
     @FXML
     public static void setMainScene() {
         try {
-            setScene("authorization");
+            setScene("main");
         }catch (IOException ex){
             System.out.println("Unable to load main scene");
             primaryStage.close();
