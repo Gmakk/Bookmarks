@@ -81,14 +81,7 @@ public class Test {
     }
 
     public static List<String> getBookmarkNames(String filePath) throws Docx4JException {
-        // Открываем документ
-        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(filePath));
-
-        // Получаем главную часть документа
-        MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();
-
-        org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) mainDocumentPart.getJaxbElement();//????????
-        Body body = wmlDocumentEl.getBody();
+        Body body = getDocumentBody(filePath);
 
         RangeFinder rt = new RangeFinder();
         new TraversalUtil(body.getContent(), rt);
@@ -100,5 +93,17 @@ public class Test {
         }
 
         return result;
+    }
+
+    public static Body getDocumentBody(String filePath) throws Docx4JException {
+
+        // Открываем документ
+        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(filePath));
+
+        // Получаем главную часть документа
+        MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();
+
+        org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) mainDocumentPart.getJaxbElement();//????????
+        return wmlDocumentEl.getBody();
     }
 }
