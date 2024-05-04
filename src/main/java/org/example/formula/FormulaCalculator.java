@@ -1,8 +1,5 @@
 package org.example.formula;
 
-import lombok.Data;
-import org.docx4j.wml.PPrBase;
-
 public class FormulaCalculator extends Formula {
     //Поля в формуле должны быть в том же порядке, что и в классе Formula
     public FormulaCalculator(){
@@ -30,7 +27,7 @@ public class FormulaCalculator extends Formula {
      */
     private Boolean checkMandatoryParams(){
         //база данных в любом случае должна быть задана
-        if(database.isBlank() || table.isBlank() || field.isBlank() || primaryKey.isBlank())
+        if(database.isBlank() || table.isBlank() || column.isBlank() || primaryKey.isBlank())
             return false;
         //если сохраняется старая стилизация, то необходимо проверить только задание базы данных
         if(saveOldStyle){
@@ -50,7 +47,7 @@ public class FormulaCalculator extends Formula {
      * @return вычисленная строка
      */
     private String calculateDatabaseString(){
-        return database + SPLIT + table + SPLIT + field + SPLIT + primaryKey;
+        return database + SPLIT + table + SPLIT + column + SPLIT + primaryKey;
     }
 
     /**
@@ -74,7 +71,7 @@ public class FormulaCalculator extends Formula {
      * @return вычисленная строка
      */
     private String calculateStyleString(){
-        return isCursive.toString() + SPLIT + isBald.toString();
+        return isCursive.toString() + SPLIT + isBald.toString() + SPLIT + highlighting + SPLIT + color;
     }
 
     /**

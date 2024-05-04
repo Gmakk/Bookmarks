@@ -26,7 +26,7 @@ public class Main extends Application {
         //отключаем возможность изменять размер окна
         primaryStage.setResizable(false);
         //устанавливаем название
-        primaryStage.setTitle("Formula calculatorSceneManager");
+        primaryStage.setTitle("Formula calculator");
         //задаем Stage, в который будут устанавливаться нужные сцены
         SceneManager.setPrimaryStage(primaryStage);
         //включаем первую сцену

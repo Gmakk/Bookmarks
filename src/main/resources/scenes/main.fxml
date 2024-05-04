@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
+<AnchorPane prefHeight="401.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
    <children>
       <TabPane id="tabPane" layoutX="37.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -13,7 +13,7 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <ComboBox fx:id="bookmarksListComboBox" layoutX="76.0" layoutY="122.0" prefWidth="150.0" />
-                        <Label layoutX="242.0" layoutY="126.0" text="Выберите закладку из списка" />
+                        <Label layoutX="287.0" layoutY="127.0" text="Выберите закладку из списка" />
                         <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="18.0" prefWidth="366.0" visible="false" />
                         <Button fx:id="chooseDocButton" layoutX="76.0" layoutY="17.0" mnemonicParsing="false" onAction="#chooseDocButtonPressed" text="Выбрать документ" />
                         <Button layoutX="76.0" layoutY="67.0" mnemonicParsing="false" onAction="#showDocBookmarksButtonPressed" text="Отобразить закладки документа" />
@@ -51,17 +51,50 @@
                         </Label>
                         <Button layoutX="76.0" layoutY="238.0" mnemonicParsing="false" onAction="#addFormulaButtonPressed" text="Добавить формулу к закладке" />
                         <Button layoutX="285.0" layoutY="237.0" mnemonicParsing="false" onAction="#clearFormulasButtonPressed" text="Очистить заданные формулы" />
+                        <CheckBox fx:id="oldStyleCheckBox" layoutX="285.0" layoutY="184.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="151.0" text="Не менять стилизацию" />
                      </children></AnchorPane>
             </content>
           </Tab>
           <Tab text="База данных">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="databaseField" layoutX="70.0" layoutY="56.0" />
+                        <TextField fx:id="tableField" layoutX="70.0" layoutY="116.0" />
+                        <TextField fx:id="columnField" layoutX="70.0" layoutY="174.0" />
+                        <Label layoutX="70.0" layoutY="23.0" text="База данных" />
+                        <Label layoutX="70.0" layoutY="88.0" text="Таблица" />
+                        <Label layoutX="70.0" layoutY="150.0" text="Поле" />
+                        <Label layoutX="70.0" layoutY="212.0" text="Первичный ключ" />
+                        <TextField fx:id="primaryKeyField" layoutX="70.0" layoutY="243.0" />
+                     </children></AnchorPane>
             </content>
           </Tab>
             <Tab text="Стилизация">
                 <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="cursiveCheckBox" layoutX="76.0" layoutY="30.0" mnemonicParsing="false" />
+                        <CheckBox fx:id="baldCheckBox" layoutX="76.0" layoutY="91.0" mnemonicParsing="false" />
+                        <CheckBox fx:id="highlightCheckBox" layoutX="76.0" layoutY="153.0" mnemonicParsing="false" onAction="#highlightCheckBoxPressed" />
+                        <ComboBox fx:id="highlightComboBox" layoutX="240.0" layoutY="149.0" prefWidth="150.0" visible="false" />
+                        <ComboBox fx:id="colorComboBox" layoutX="76.0" layoutY="239.0" prefWidth="150.0" />
+                        <Label layoutX="114.0" layoutY="30.0" text="Курсив" />
+                        <Label layoutX="115.0" layoutY="91.0" text="Жирный" />
+                        <Label layoutX="115.0" layoutY="153.0" text="Выделение цветом" />
+                        <Label layoutX="76.0" layoutY="200.0" text="Цвет текста" />
+                     </children></AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Шрифт">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="fontComboBox" layoutX="61.0" layoutY="69.0" prefWidth="150.0" />
+                        <Label layoutX="62.0" layoutY="134.0" text="Размер шрифта" />
+                        <Spinner fx:id="fontSizeSpinner" editable="true" layoutX="62.0" layoutY="174.0" />
+                        <Label layoutX="61.0" layoutY="28.0" text="Шрифт" />
+                     </children></AnchorPane>
                 </content>
             </Tab>
             <Tab text="Форматирование">
@@ -69,14 +102,12 @@
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                 </content>
             </Tab>
-            <Tab text="Шрифт">
-                <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                </content>
-            </Tab>
             <Tab text="Подстановка значений в документ">
                 <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="234.0" layoutY="161.0" mnemonicParsing="false" text="Подставить значения в документ" />
+                     </children></AnchorPane>
                 </content>
             </Tab>
         </tabs>

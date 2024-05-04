@@ -32,7 +32,7 @@ public class Test {
         FormulaCalculator calculator = new FormulaCalculator();
         calculator.setDatabaseParams("database","table","field","key");
         calculator.setFont("Arial",15);
-        calculator.setStyle(true,true);
+        calculator.setStyle(true,true, "#FFFF00", "#000000");
         //calculator.setFormatting(true);
         log.info(calculator.toString());
         log.info(calculator.calculate());
@@ -80,8 +80,8 @@ public class Test {
         wordMLPackage.save(new File(pathToFiles + "templates"+ System.getProperty("file.separator") +"RESULT.docx"));
     }
 
-    public static List<String> getBookmarkNames(String filePath) throws Docx4JException {
-        Body body = getDocumentBody(filePath);
+    public static List<String> getBookmarkNames(WordprocessingMLPackage wordMLPackage) throws Docx4JException {
+        Body body = getDocumentBody(wordMLPackage);
 
         RangeFinder rt = new RangeFinder();
         new TraversalUtil(body.getContent(), rt);
@@ -95,10 +95,7 @@ public class Test {
         return result;
     }
 
-    public static Body getDocumentBody(String filePath) throws Docx4JException {
-
-        // Открываем документ
-        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(new File(filePath));
+    public static Body getDocumentBody(WordprocessingMLPackage wordMLPackage) throws Docx4JException {
 
         // Получаем главную часть документа
         MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();

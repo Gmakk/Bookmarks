@@ -31,8 +31,10 @@ public class FormulaParser extends Formula{
         //получаем список всех полей
         List<Field> fields = new ArrayList<>();
         fields.addAll(Arrays.asList(Formula.class.getDeclaredFields()));
+
         //удаляем первое поле, тк там хранится разделяющий элемент который уже задан
-        fields.remove(0);
+        //fields.remove(0);
+
         //тк параметры в формуле находятся в то же порядке, что и поля, то присваиваем i-тому полю значение i-того параметра
         for(int i=0;i<params.length;i++){
             if(params[i].equals("true") || params[i].equals("false"))

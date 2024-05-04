@@ -155,6 +155,8 @@ public class BookmarksReplaceWithText {
         RPr rPr = factory.createRPr();
         RFonts fonts = factory.createRFonts();
         HpsMeasure hpsmeasure = factory.createHpsMeasure();//нужно для задания размера шрифта
+        Color color = factory.createColor();
+
         String[] lines = value.split("\n");
         String lastLine = lines[lines.length - 1];
 
@@ -171,6 +173,7 @@ public class BookmarksReplaceWithText {
             }
         }
 
+        //TODO: Проверить false для желтых выделений
         //устанавливаем шрифт
         fonts.setAscii("Arial");
         fonts.setHAnsi("Arial");
@@ -180,6 +183,10 @@ public class BookmarksReplaceWithText {
         //устанавливаем размер шрифта
         hpsmeasure.setVal(BigInteger.valueOf(30*2));
         rPr.setSz(hpsmeasure);
+
+        //цвет текста
+        color.setVal("#C0C0C0");
+        rPr.setColor(color);
         //устанавливаем жирный и курсивный текст
         rPr.setB(new BooleanDefaultTrue());//жирный
         rPr.setI(new BooleanDefaultTrue());//курсив
