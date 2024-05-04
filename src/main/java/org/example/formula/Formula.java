@@ -6,7 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Formula {
-    protected static final String SPLIT = "?";
+    protected static final String SPLIT = "~";
 
     public Formula(){
     }
@@ -27,7 +27,7 @@ public class Formula {
     //стилизация - по умолчанию нет
     protected Boolean isCursive = false;//курсив
     protected Boolean isBald = false;//выделен жирным
-    protected String highlighting = null;//желтые выделения   "Yellow", etc
+    protected String highlighting = null;//желтые выделения   "Yellow", etc. "absent" - без выделения
     protected String color = null;//цвет текста  "Red", etc
 
 

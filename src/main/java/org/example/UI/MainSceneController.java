@@ -22,6 +22,7 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Body;
 import org.docx4j.wml.Document;
+import org.example.BookmarksReplaceWithText;
 import org.example.Main;
 import org.example.Test;
 import org.example.BookmarksAlterWithFormula;
@@ -187,7 +188,7 @@ public class MainSceneController implements Initializable {
                     highlightComboBox.getValue(), colorComboBox.getValue());
         else//если выделение не требуется
             calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),
-                    "false", colorComboBox.valueProperty().getName());
+                    "absent", colorComboBox.valueProperty().getName());
         calculator.setOldStyle(oldStyleCheckBox.isSelected());
 
         alterMap.put(dataFieldName, calculator.calculate());
@@ -209,17 +210,49 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     public void fillDocumentButtonPressed() throws Exception {
+        //добавление формулы в невидимый элемент
         Body body = Test.getDocumentBody(wordMLPackage);
         BookmarksAlterWithFormula.alterBookmarkContent(body.getContent(),alterMap);
         log.info("Previously created formulas have been added to the document:\n" + alterMap);
+
+        //сохранение документа
         //wordMLPackage.save(new File("C:\\Users\\krasi\\Desktop\\Programms\\Java\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
-        wordMLPackage.save(new File("C:\\Users\\krasi\\IdeaProjects\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
+        //wordMLPackage.save(new File("C:\\Users\\krasi\\IdeaProjects\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
+        wordMLPackage.save(new File(fileNameLabel.getText()));
         //TODO: Сохранить отдельный файл или изменять существующий
         log.info("Document has been saved");
     }
 
+    /**
+     * Делает видимым выбор цвета выделения, если активен соответствующий чек-бокс
+     */
     @FXML
     public void highlightCheckBoxPressed() throws Exception {
         highlightComboBox.setVisible(highlightCheckBox.isSelected());
+    }
+
+    /**
+     * Подставляет в документ значения в соответствии с заданными в нем формулами
+     */
+    @FXML
+    public void  fillInDocumentButtonPressed() throws Exception {
+        //подстановка по формулам
+        //TODO: найти все закладки с невидимыми элементами
+        //TODO: доделать форматирование в соответствии с формулой
+        //заполнение map закладка - текст_подстановки
+        Map<DataFieldName, String> replaceMap = new HashMap<DataFieldName, String>();
+        replaceMap.put( new DataFieldName("paragraph1"), "parChange1");
+        replaceMap.put( new DataFieldName("paragraph2"), "parChange2");
+        replaceMap.put( new DataFieldName("DOCX"), "ChangeDOCX1");
+        //замена текста закладки
+        Body body = Test.getDocumentBody(wordMLPackage);
+        BookmarksReplaceWithText.replaceBookmarkContents(body.getContent(), replaceMap);
+
+        //сохранение документа
+        //wordMLPackage.save(new File("C:\\Users\\krasi\\Desktop\\Programms\\Java\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
+        //wordMLPackage.save(new File("C:\\Users\\krasi\\IdeaProjects\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
+        wordMLPackage.save(new File(fileNameLabel.getText()));
+        //TODO: Сохранить отдельный файл или изменять существующий
+        log.info("Document has been saved");
     }
 }

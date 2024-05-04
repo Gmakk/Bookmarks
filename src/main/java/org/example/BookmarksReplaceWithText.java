@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.xml.bind.JAXBElement;
 import org.docx4j.TraversalUtil;
 import org.docx4j.XmlUtils;
 import org.docx4j.finders.RangeFinder;
@@ -13,6 +14,7 @@ import org.docx4j.model.fields.merge.DataFieldName;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.*;
+import org.example.formula.Formula;
 import org.example.formula.FormulaParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +79,13 @@ public class BookmarksReplaceWithText {
                 //если нашли невидимый run, то достаем строку с формулой из него
                 if (listEntry instanceof R && ((R) listEntry).getRPr() != null &&
                         ((R) listEntry).getRPr().getVanish() != null && ((R) listEntry).getRPr().getVanish().isVal()) {
-                    formula = ((Text)(((R) listEntry).getContent().get(0))).getValue();
+
+                    //TODO: Проверить остальные варианты
+                    Object content = ((R) listEntry).getContent().get(0);
+                    if(content instanceof Text)
+                        formula = ((Text)(content)).getValue();
+                    if(content instanceof JAXBElement)
+                        formula = ((Text)((JAXBElement)(content)).getValue()).getValue();
                 }
                 if (listEntry.equals(bm)) {
                     if (DELETE_BOOKMARK) {
@@ -128,14 +136,16 @@ public class BookmarksReplaceWithText {
                 }
 
                 //TODO: получить значение из бд по формуле
-                if(formula != null)
-                    log.info("formula" + formula + "" );
 
-                FormulaParser parser = new FormulaParser();
-                parser.parse(formula);
+                //если есть формула, то стилизация в соответствии с ее полями
+                if(formula != null) {
+                    FormulaParser parser = new FormulaParser();
+                    parser.parse(formula);
+                    // now add a run, replacing newline characters with BR tags
+                    theList.add(insertIndex, createSubstitutionRun(parser,value));
+                }else//если нет формулы, стилизация без изменений
+                    theList.add(insertIndex, createSubstitutionRun(null,value));
 
-                // now add a run, replacing newline characters with BR tags
-                theList.add(insertIndex, createSubstitutionRun(formula,value));
             }
             else
             {
@@ -150,7 +160,7 @@ public class BookmarksReplaceWithText {
      * @param value текст, содержащийся в элементе
      * @return созданный элемент
      */
-    private static R createSubstitutionRun(String formula, String value){
+    private static R createSubstitutionRun(Formula formula, String value){
         org.docx4j.wml.R run = factory.createR();
         RPr rPr = factory.createRPr();
         RFonts fonts = factory.createRFonts();
@@ -173,28 +183,35 @@ public class BookmarksReplaceWithText {
             }
         }
 
-        //TODO: Проверить false для желтых выделений
-        //устанавливаем шрифт
-        fonts.setAscii("Arial");
-        fonts.setHAnsi("Arial");
-        fonts.setCs("Arial");
-        run.setRPr(rPr);
-        rPr.setRFonts(fonts);
-        //устанавливаем размер шрифта
-        hpsmeasure.setVal(BigInteger.valueOf(30*2));
-        rPr.setSz(hpsmeasure);
+        if(formula != null && !formula.getSaveOldStyle()) {
+            //устанавливаем жирный и курсивный текст
+            if(formula.getIsCursive())
+                rPr.setI(new BooleanDefaultTrue());//курсив
+            if(formula.getIsBald())
+                rPr.setB(new BooleanDefaultTrue());//жирный
+            //выделение цветом
+            if(!formula.getHighlighting().equals("absent"))
+                                     System.out.println("//TODO: установить выделение");
+            //цвет текста
+            color.setVal(formula.getColor());//"#C0C0C0"
+            //устанавливаем шрифт
+            fonts.setAscii(formula.getFont());//"Arial"
+            fonts.setHAnsi(formula.getFont());//"Arial"
+            fonts.setCs(formula.getFont());//"Arial"
+            //устанавливаем размер шрифта
+            hpsmeasure.setVal(BigInteger.valueOf(formula.getFontSize() * 2));
 
-        //цвет текста
-        color.setVal("#C0C0C0");
-        rPr.setColor(color);
-        //устанавливаем жирный и курсивный текст
-        rPr.setB(new BooleanDefaultTrue());//жирный
-        rPr.setI(new BooleanDefaultTrue());//курсив
-        //TODO: устанавливать стиль вышестоящему параграфу? Подтягивать возможные стили из /word/styles.xml?
+
+            run.setRPr(rPr);
+            rPr.setRFonts(fonts);
+            rPr.setSz(hpsmeasure);
+            rPr.setColor(color);
+
+            //TODO: устанавливать стиль вышестоящему параграфу? Подтягивать возможные стили из /word/styles.xml?
 //        //устанавливаем стиль заголовка
 //        PPrBase.PStyle style = pPr.getPStyle();
 //        style.setVal("1"); || style.setVal("11") || style.setVal("a0");
-
+        }
 
         return run;
     }

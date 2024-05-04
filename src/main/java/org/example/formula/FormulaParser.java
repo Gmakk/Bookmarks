@@ -22,6 +22,8 @@ public class FormulaParser extends Formula{
      */
     public void parse(String formula) throws IllegalArgumentException, IllegalAccessException {
         //регулярное выражение для разделения формулы на параметры, находящиеся между разделительным знаком
+        if(formula == null || formula.isBlank())
+            throw new IllegalArgumentException("formula is blank or null");
         Pattern pattern = Pattern.compile(SPLIT);
         String[] params = pattern.split(formula,-1);
         for (String par : params)
@@ -33,7 +35,7 @@ public class FormulaParser extends Formula{
         fields.addAll(Arrays.asList(Formula.class.getDeclaredFields()));
 
         //удаляем первое поле, тк там хранится разделяющий элемент который уже задан
-        //fields.remove(0);
+        fields.remove(0);
 
         //тк параметры в формуле находятся в то же порядке, что и поля, то присваиваем i-тому полю значение i-того параметра
         for(int i=0;i<params.length;i++){

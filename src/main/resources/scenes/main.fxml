@@ -12,6 +12,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
+                        <Button fx:id="fillInDocumentButtonPressed" layoutX="241.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillInDocumentButtonPressed" text="Подставить значения в документ" />
                         <ComboBox fx:id="bookmarksListComboBox" layoutX="76.0" layoutY="122.0" prefWidth="150.0" />
                         <Label layoutX="287.0" layoutY="127.0" text="Выберите закладку из списка" />
                         <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="18.0" prefWidth="366.0" visible="false" />
@@ -59,14 +60,14 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="databaseField" layoutX="70.0" layoutY="56.0" />
-                        <TextField fx:id="tableField" layoutX="70.0" layoutY="116.0" />
-                        <TextField fx:id="columnField" layoutX="70.0" layoutY="174.0" />
+                        <TextField fx:id="databaseField" layoutX="70.0" layoutY="56.0" text="a" />
+                        <TextField fx:id="tableField" layoutX="70.0" layoutY="116.0" text="b" />
+                        <TextField fx:id="columnField" layoutX="70.0" layoutY="174.0" text="c" />
                         <Label layoutX="70.0" layoutY="23.0" text="База данных" />
                         <Label layoutX="70.0" layoutY="88.0" text="Таблица" />
                         <Label layoutX="70.0" layoutY="150.0" text="Поле" />
                         <Label layoutX="70.0" layoutY="212.0" text="Первичный ключ" />
-                        <TextField fx:id="primaryKeyField" layoutX="70.0" layoutY="243.0" />
+                        <TextField fx:id="primaryKeyField" layoutX="70.0" layoutY="243.0" text="d" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -100,14 +101,6 @@
             <Tab text="Форматирование">
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                </content>
-            </Tab>
-            <Tab text="Подстановка значений в документ">
-                <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Button layoutX="234.0" layoutY="161.0" mnemonicParsing="false" text="Подставить значения в документ" />
-                     </children></AnchorPane>
                 </content>
             </Tab>
         </tabs>

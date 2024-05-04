@@ -13,7 +13,7 @@ public class FormulaCalculator extends Formula {
         if (checkMandatoryParams()){
             //если нужно оставить старую стилизацию
             if (saveOldStyle)
-                return calculateDatabaseString() + SPLIT + "old";
+                return calculateDatabaseString() + SPLIT + calculateOldStyleString();
             else  {
                 return calculateDatabaseString() + SPLIT + calculateOldStyleString() + SPLIT+ calculateFormattingString() + SPLIT +
                         calculateStyleString() + SPLIT + calculateFontString();
