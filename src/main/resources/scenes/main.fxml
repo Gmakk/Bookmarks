@@ -4,18 +4,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="401.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
+<AnchorPane prefHeight="403.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
    <children>
       <TabPane id="tabPane" layoutX="37.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Настройка закладки">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="732.0">
                      <children>
                         <Button fx:id="fillInDocumentButtonPressed" layoutX="241.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillInDocumentButtonPressed" text="Подставить значения в документ" />
                         <ComboBox fx:id="bookmarksListComboBox" layoutX="76.0" layoutY="122.0" prefWidth="150.0" />
                         <Label layoutX="287.0" layoutY="127.0" text="Выберите закладку из списка" />
-                        <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="18.0" prefWidth="366.0" visible="false" />
+                        <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="18.0" prefWidth="491.0" visible="false" />
                         <Button fx:id="chooseDocButton" layoutX="76.0" layoutY="17.0" mnemonicParsing="false" onAction="#chooseDocButtonPressed" text="Выбрать документ" />
                         <Button layoutX="76.0" layoutY="67.0" mnemonicParsing="false" onAction="#showDocBookmarksButtonPressed" text="Отобразить закладки документа" />
                         <Button layoutX="76.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillDocumentButtonPressed" text="Заполнить документ" />
@@ -53,6 +53,8 @@
                         <Button layoutX="76.0" layoutY="238.0" mnemonicParsing="false" onAction="#addFormulaButtonPressed" text="Добавить формулу к закладке" />
                         <Button layoutX="285.0" layoutY="237.0" mnemonicParsing="false" onAction="#clearFormulasButtonPressed" text="Очистить заданные формулы" />
                         <CheckBox fx:id="oldStyleCheckBox" layoutX="285.0" layoutY="184.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="151.0" text="Не менять стилизацию" />
+                        <TextArea fx:id="logTextArea" editable="false" layoutX="515.0" layoutY="78.0" prefHeight="200.0" prefWidth="200.0" />
+                        <Label layoutX="515.0" layoutY="57.0" text="Отчет о работе:" />
                      </children></AnchorPane>
             </content>
           </Tab>

@@ -42,8 +42,6 @@ public class BookmarksReplaceWithText {
 
     private static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
 
-    //TODO: При проходе менять только те у коо есть формула
-
     /**
      * Метод для подстановки значений на место закладок
      * @param paragraphs список параграфов документа
@@ -111,7 +109,7 @@ public class BookmarksReplaceWithText {
                 i++;
             }
 
-            if (rangeStart>0 && rangeEnd>=rangeStart) {
+            if (rangeStart>0 && rangeEnd>=rangeStart && formula != null) {
 
                 int insertIndex = rangeStart;
 
@@ -135,21 +133,16 @@ public class BookmarksReplaceWithText {
                     }
                 }
 
-                //TODO: получить значение из бд по формуле
-
+                //TODO: передавать в этот метод не значение для подстановки, а брать его здесь из бд по формуле
                 //если есть формула, то стилизация в соответствии с ее полями
-                if(formula != null) {
-                    FormulaParser parser = new FormulaParser();
-                    parser.parse(formula);
-                    // now add a run, replacing newline characters with BR tags
-                    theList.add(insertIndex, createSubstitutionRun(parser,value));
-                }else//если нет формулы, стилизация без изменений
-                    theList.add(insertIndex, createSubstitutionRun(null,value));
+                FormulaParser parser = new FormulaParser();
+                parser.parse(formula);
+                theList.add(insertIndex, createSubstitutionRun(parser,value));
 
             }
             else
             {
-                log.warn("Bookmark " + bm.getName() + " doesn't appear to be valid; rangeStart=" + rangeStart + ", rangeEnd=" + rangeEnd + ". Probable cause: overlapping bookmarks.");
+                log.warn("Bookmark " + bm.getName() + " with formula " + formula + " doesn't appear to be valid; rangeStart=" + rangeStart + ", rangeEnd=" + rangeEnd + ". Probable cause: overlapping bookmarks or empty formula");
             }
         }
     }
@@ -166,10 +159,12 @@ public class BookmarksReplaceWithText {
         RFonts fonts = factory.createRFonts();
         HpsMeasure hpsmeasure = factory.createHpsMeasure();//нужно для задания размера шрифта
         Color color = factory.createColor();
+        Highlight highlight = factory.createHighlight();
 
         String[] lines = value.split("\n");
         String lastLine = lines[lines.length - 1];
 
+        // now add a run, replacing newline characters with BR tags
         for (final String line : lines)
         {
             org.docx4j.wml.Text  t = factory.createText();
@@ -191,7 +186,7 @@ public class BookmarksReplaceWithText {
                 rPr.setB(new BooleanDefaultTrue());//жирный
             //выделение цветом
             if(!formula.getHighlighting().equals("absent"))
-                                     System.out.println("//TODO: установить выделение");
+                highlight.setVal(formula.getHighlighting());
             //цвет текста
             color.setVal(formula.getColor());//"#C0C0C0"
             //устанавливаем шрифт
@@ -206,6 +201,7 @@ public class BookmarksReplaceWithText {
             rPr.setRFonts(fonts);
             rPr.setSz(hpsmeasure);
             rPr.setColor(color);
+            rPr.setHighlight(highlight);
 
             //TODO: устанавливать стиль вышестоящему параграфу? Подтягивать возможные стили из /word/styles.xml?
 //        //устанавливаем стиль заголовка

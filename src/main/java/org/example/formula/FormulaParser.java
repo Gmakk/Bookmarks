@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class FormulaParser extends Formula{
-    //TODO: проверка на состояния при парсинге или отдельным методом?
     protected static Logger log = LoggerFactory.getLogger(Formula.class);
 
     /**
@@ -38,6 +37,7 @@ public class FormulaParser extends Formula{
         fields.remove(0);
 
         //тк параметры в формуле находятся в то же порядке, что и поля, то присваиваем i-тому полю значение i-того параметра
+        //TODO:проверка валидности формулы
         for(int i=0;i<params.length;i++){
             if(params[i].equals("true") || params[i].equals("false"))
                 fields.get(i).set(this,Boolean.valueOf(params[i]));

@@ -38,7 +38,7 @@ public class SceneManager {
             loader.setLocation(xmlUrl);
             Parent root = loader.load();
             //создание из него сцены
-            Scene scene = new Scene(root,1000,650);
+            Scene scene = new Scene(root,744,403);
             scenes.put(name,scene);
         }
         //устанавливаем отображаемую сцену

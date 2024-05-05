@@ -35,7 +35,7 @@ public class FormulaCalculator extends Formula {
         }else{
             //проверяем все обязательные поля
             //TODO: добавить остальные поля
-            if((font.isBlank() || fontSize == null))
+            if(font.isBlank() || fontSize == null || highlighting == null || color == null)
                 return false;
             else
                 return true;

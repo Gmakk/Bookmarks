@@ -1,11 +1,10 @@
 package org.example.UI;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
@@ -19,12 +18,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.docx4j.model.fields.merge.DataFieldName;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.Body;
-import org.docx4j.wml.Document;
 import org.example.BookmarksReplaceWithText;
-import org.example.Main;
-import org.example.Test;
+import org.example.Files;
 import org.example.BookmarksAlterWithFormula;
 import org.example.formula.FormulaCalculator;
 import org.slf4j.Logger;
@@ -41,9 +37,10 @@ public class MainSceneController implements Initializable {
     // и их формулами для последующего добавления в документ
     private static final Map<DataFieldName, String> alterMap = new HashMap<>();
 
-    private static final Map<String,String> colors = new HashMap<>();
+    private static final Map<String,String> textColors = new HashMap<>();
+    private static final Map<String,String> highlightColors = new HashMap<>();//выделение не поддерживает всех цветов
 
-    private static WordprocessingMLPackage wordMLPackage;
+    private static WordprocessingMLPackage wordMLPackage = null;
 
     //настройки
     @FXML
@@ -52,6 +49,8 @@ public class MainSceneController implements Initializable {
     private ComboBox<String> bookmarksListComboBox;
     @FXML
     private CheckBox oldStyleCheckBox;
+    @FXML
+    private TextArea logTextArea;
     //база данных
     @FXML
     private TextField databaseField;
@@ -96,27 +95,48 @@ public class MainSceneController implements Initializable {
         fontSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100,14));
 
         //заполняется combo box с доступными цветами шрифта и выделения и по умолчанию выбирается черный и желтый
-        colors.put("Black",	"#000000");
-        colors.put("Gray","#808080");
-        colors.put("Silver","#C0C0C0");
-        colors.put("White","#FFFFFF");
-        colors.put("Fuchsia","#FF00FF");
-        colors.put("Purple","#800080");
-        colors.put("Red","#FF0000");
-        colors.put("Maroon","#800000");
-        colors.put("Yellow","#FFFF00");
-        colors.put("Olive","#808000");
-        colors.put("Lime","#00FF00");
-        colors.put("Green","#008000");
-        colors.put("Aqua","#00FFFF");
-        colors.put("Teal","#008080");
-        colors.put("Blue","#0000FF");
-        colors.put("Navy","#000080");
-        List<String> colorList = new ArrayList<>(colors.keySet());
-        colorComboBox.getItems().addAll(colorList);
-        colorComboBox.getSelectionModel().select(colorList.indexOf("Black"));
-        highlightComboBox.getItems().addAll(colorList);
-        highlightComboBox.getSelectionModel().select(colorList.indexOf("Yellow"));
+        textColors.put("Black",	"#000000");
+        textColors.put("Gray","#808080");
+        textColors.put("Silver","#C0C0C0");
+        textColors.put("White","#FFFFFF");
+        textColors.put("Fuchsia","#FF00FF");
+        textColors.put("Purple","#800080");
+        textColors.put("Red","#FF0000");
+        textColors.put("Maroon","#800000");
+        textColors.put("Yellow","#FFFF00");
+        textColors.put("Olive","#808000");
+        textColors.put("Lime","#00FF00");
+        textColors.put("Green","#008000");
+        textColors.put("Aqua","#00FFFF");
+        textColors.put("Teal","#008080");
+        textColors.put("Blue","#0000FF");
+        textColors.put("Navy","#000080");
+
+
+        highlightColors.put("Black", "#000000");
+        highlightColors.put("Blue", "#0000FF");
+        highlightColors.put("Cyan", "#00FFFF");
+        highlightColors.put("Green", "#008000");
+        highlightColors.put("Magenta", "#FF00FF");
+        highlightColors.put("Red", "#FF0000");
+        highlightColors.put("Yellow", "#FFFF00");
+        highlightColors.put("White", "#FFFFFF");
+        highlightColors.put("DarkBlue", "#00008B");
+        highlightColors.put("DarkCyan", "#008B8B");
+        highlightColors.put("DarkGreen", "#006400");
+        highlightColors.put("DarkMagenta", "#8B008B");
+        highlightColors.put("DarkRed", "#8B0000");
+        highlightColors.put("DarkYellow", "#FFD700");
+        highlightColors.put("DarkGray", "#A9A9A9");
+        highlightColors.put("LightGray", "#D3D3D3");
+
+
+        List<String> textColorList = new ArrayList<>(textColors.keySet());
+        List<String> highlightColorList = new ArrayList<>(highlightColors.keySet());
+        colorComboBox.getItems().addAll(textColorList);
+        colorComboBox.getSelectionModel().select(textColorList.indexOf("Black"));
+        highlightComboBox.getItems().addAll(highlightColorList);
+        highlightComboBox.getSelectionModel().select(highlightColorList.indexOf("Yellow"));
     }
 
     /**
@@ -129,7 +149,7 @@ public class MainSceneController implements Initializable {
         String path = file.getAbsolutePath();
         if (file != null) {
             //проверяем формат файла
-            if(!path.substring(path.length() - 5).equals(".docx")){
+            if(!path.endsWith(".docx")){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Формат документа должен быть .docx", ButtonType.OK);
                 alert.showAndWait();
                 return;
@@ -137,6 +157,7 @@ public class MainSceneController implements Initializable {
             fileNameLabel.setText(file.getAbsolutePath());
             fileNameLabel.setVisible(true);
             bookmarksListComboBox.getItems().clear();
+            wordMLPackage = null;
         }
     }
 
@@ -146,10 +167,10 @@ public class MainSceneController implements Initializable {
     @FXML
     public void showDocBookmarksButtonPressed() throws Docx4JException {
         if(!fileNameLabel.getText().isBlank()){
-            // Открываем документ
+            //открываем документ
             wordMLPackage = WordprocessingMLPackage.load(new File(fileNameLabel.getText()));
-
-            List<String> bookmarkNames = Test.getBookmarkNames(wordMLPackage);
+            //загружаем закладки документа
+            List<String> bookmarkNames = Files.getBookmarkNames(wordMLPackage);
             if(bookmarkNames.isEmpty()){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "В документе нет закладок", ButtonType.OK);
                 alert.showAndWait();
@@ -169,13 +190,19 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     public void addFormulaButtonPressed() throws Exception {
-        //добавление формул
+        if(bookmarksListComboBox.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала выбрать закладку, загрузите для этого документ", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
         if(databaseField.getText().isBlank() || tableField.getText().isBlank() ||
                 columnField.getText().isBlank() || primaryKeyField.getText().isBlank()){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Поля базы данных не должны быть пустыми", ButtonType.OK);
             alert.showAndWait();
             return;
         }
+
+
         DataFieldName dataFieldName = new DataFieldName(bookmarksListComboBox.getValue());
         //если формула для этой закладки уже существует, то заменяется на новую
         alterMap.remove(dataFieldName);
@@ -185,13 +212,14 @@ public class MainSceneController implements Initializable {
         calculator.setFont(fontComboBox.getValue(),fontSizeSpinner.getValue());
         if(highlightCheckBox.isSelected())//если нужно выделить текст
             calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),
-                    highlightComboBox.getValue(), colorComboBox.getValue());
+                    highlightColors.get(highlightComboBox.getValue()), textColors.get(colorComboBox.getValue()));
         else//если выделение не требуется
             calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),
-                    "absent", colorComboBox.valueProperty().getName());
+                    "absent", textColors.get(colorComboBox.getValue()));
         calculator.setOldStyle(oldStyleCheckBox.isSelected());
-
+        //добавление формулы в map, для последующего отображения в файле
         alterMap.put(dataFieldName, calculator.calculate());
+        logTextArea.appendText("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue() + "\n");
         log.info("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue());
     }
 
@@ -202,6 +230,7 @@ public class MainSceneController implements Initializable {
     @FXML
     public void clearFormulasButtonPressed() throws Exception {
         alterMap.clear();
+        logTextArea.appendText("List of formulas has been cleared\n");
         log.info("List of formulas has been cleared");
     }
 
@@ -210,10 +239,16 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     public void fillDocumentButtonPressed() throws Exception {
-        //добавление формулы в невидимый элемент
-        Body body = Test.getDocumentBody(wordMLPackage);
+        if(wordMLPackage == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
+        //добавление формул в невидимый элемент
+        Body body = Files.getDocumentBody(wordMLPackage);
         BookmarksAlterWithFormula.alterBookmarkContent(body.getContent(),alterMap);
-        log.info("Previously created formulas have been added to the document:\n" + alterMap);
+        log.info("Previously created formulas have been added to the document");
+        logTextArea.appendText("Previously created formulas have been added to the document\n");
 
         //сохранение документа
         //wordMLPackage.save(new File("C:\\Users\\krasi\\Desktop\\Programms\\Java\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
@@ -221,14 +256,7 @@ public class MainSceneController implements Initializable {
         wordMLPackage.save(new File(fileNameLabel.getText()));
         //TODO: Сохранить отдельный файл или изменять существующий
         log.info("Document has been saved");
-    }
-
-    /**
-     * Делает видимым выбор цвета выделения, если активен соответствующий чек-бокс
-     */
-    @FXML
-    public void highlightCheckBoxPressed() throws Exception {
-        highlightComboBox.setVisible(highlightCheckBox.isSelected());
+        logTextArea.appendText("Document has been saved\n");
     }
 
     /**
@@ -236,16 +264,19 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     public void  fillInDocumentButtonPressed() throws Exception {
+        if(wordMLPackage == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
         //подстановка по формулам
-        //TODO: найти все закладки с невидимыми элементами
-        //TODO: доделать форматирование в соответствии с формулой
         //заполнение map закладка - текст_подстановки
         Map<DataFieldName, String> replaceMap = new HashMap<DataFieldName, String>();
         replaceMap.put( new DataFieldName("paragraph1"), "parChange1");
         replaceMap.put( new DataFieldName("paragraph2"), "parChange2");
         replaceMap.put( new DataFieldName("DOCX"), "ChangeDOCX1");
         //замена текста закладки
-        Body body = Test.getDocumentBody(wordMLPackage);
+        Body body = Files.getDocumentBody(wordMLPackage);
         BookmarksReplaceWithText.replaceBookmarkContents(body.getContent(), replaceMap);
 
         //сохранение документа
@@ -254,5 +285,14 @@ public class MainSceneController implements Initializable {
         wordMLPackage.save(new File(fileNameLabel.getText()));
         //TODO: Сохранить отдельный файл или изменять существующий
         log.info("Document has been saved");
+        logTextArea.appendText("Document has been saved\n");
+    }
+
+    /**
+     * Делает видимым выбор цвета выделения, если активен соответствующий чек-бокс
+     */
+    @FXML
+    private void highlightCheckBoxPressed() throws Exception {
+        highlightComboBox.setVisible(highlightCheckBox.isSelected());
     }
 }
