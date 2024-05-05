@@ -1,7 +1,7 @@
 package org.example.formula;
 
 public class FormulaCalculator extends Formula {
-    //Поля в формуле должны быть в том же порядке, что и в классе Formula
+    //Поля в формуле должны быть в том же порядке, что и в классе Formula!!!!!!!!!!
     public FormulaCalculator(){
     }
     /**
@@ -27,7 +27,8 @@ public class FormulaCalculator extends Formula {
      */
     private Boolean checkMandatoryParams(){
         //база данных в любом случае должна быть задана
-        if(database.isBlank() || table.isBlank() || column.isBlank() || primaryKey.isBlank())
+        if(database.isBlank() || table.isBlank() || column.isBlank() || primaryKey.isBlank() || databaseType.isBlank()
+            || url.isBlank() || username.isBlank() || password.isBlank() || primaryKeyValue.isBlank())
             return false;
         //если сохраняется старая стилизация, то необходимо проверить только задание базы данных
         if(saveOldStyle){
@@ -47,7 +48,8 @@ public class FormulaCalculator extends Formula {
      * @return вычисленная строка
      */
     private String calculateDatabaseString(){
-        return database + SPLIT + table + SPLIT + column + SPLIT + primaryKey;
+        return url + SPLIT + username + SPLIT + password + SPLIT + databaseType + SPLIT +
+                database + SPLIT + table + SPLIT + column + SPLIT + primaryKey + SPLIT + primaryKeyValue;
     }
 
     /**

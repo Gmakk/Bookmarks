@@ -60,6 +60,16 @@ public class MainSceneController implements Initializable {
     private TextField columnField;
     @FXML
     private TextField primaryKeyField;
+    @FXML
+    private TextField primaryKeyValueField;
+    @FXML
+    private TextField urlTextField;
+    @FXML
+    private TextField usernameTextField;
+    @FXML
+    private TextField passwordTextField;
+    @FXML
+    private ComboBox<String> databaseTypeComboBox;
     //стилизация
     @FXML
     private CheckBox cursiveCheckBox;
@@ -137,6 +147,9 @@ public class MainSceneController implements Initializable {
         colorComboBox.getSelectionModel().select(textColorList.indexOf("Black"));
         highlightComboBox.getItems().addAll(highlightColorList);
         highlightComboBox.getSelectionModel().select(highlightColorList.indexOf("Yellow"));
+
+        //TODO: заполнение combo box возможными бд
+        //Обработка неправильно введенных данных бд, в том числе значения главного ключа(не нашли данные)
     }
 
     /**
@@ -208,15 +221,22 @@ public class MainSceneController implements Initializable {
         alterMap.remove(dataFieldName);
 
         //задание параметров для формулы
-        calculator.setDatabaseParams(databaseField.getText(),tableField.getText(),columnField.getText(),primaryKeyField.getText());
+        //база данных
+        calculator.setDatabaseParams(urlTextField.getText(),usernameTextField.getText(),passwordTextField.getText(),databaseTypeComboBox.getValue(),
+                databaseField.getText(),tableField.getText(),columnField.getText(),primaryKeyField.getText(),primaryKeyValueField.getText());
+        //шрифт
         calculator.setFont(fontComboBox.getValue(),fontSizeSpinner.getValue());
+        //стилизация
         if(highlightCheckBox.isSelected())//если нужно выделить текст
             calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),
                     highlightColors.get(highlightComboBox.getValue()), textColors.get(colorComboBox.getValue()));
         else//если выделение не требуется
             calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),
                     "absent", textColors.get(colorComboBox.getValue()));
+        //сохранять ли старый стиль текста при подстановке
         calculator.setOldStyle(oldStyleCheckBox.isSelected());
+
+
         //добавление формулы в map, для последующего отображения в файле
         alterMap.put(dataFieldName, calculator.calculate());
         logTextArea.appendText("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue() + "\n");

@@ -13,10 +13,16 @@ public class Formula {
 
     //TODO: для выпадающего списка посмотреть возможность выводить имеющиеся в бд поля
     //откуда брать данные - ОБЯЗАТЕЛЬНЫЕ поля
+    protected String url = null;
+    protected String username = null;
+    protected String password = null;
+    protected String databaseType = null;
+
     protected String database = null;
     protected String table = null;
     protected String column = null;
     protected String primaryKey = null;
+    protected String primaryKeyValue = null;
 
     //сохранять ли старую стилизацию - по умолчанию нет
     protected Boolean saveOldStyle = false;
@@ -47,12 +53,19 @@ public class Formula {
         this.saveOldStyle = saveOldStyle;
     }
 
-    public void setDatabaseParams(String database, String table, String column, String primaryKey){
-        if (!database.isBlank() && !table.isBlank() && !column.isBlank() && !primaryKey.isBlank()) {
+    public void setDatabaseParams(String url, String username, String password, String databaseType,
+                                  String database, String table, String column, String primaryKey, String primaryKeyValue){
+        if (!database.isBlank() && !table.isBlank() && !column.isBlank() && !primaryKey.isBlank()
+                && !url.isBlank() && !username.isBlank() && !password.isBlank()) {
             this.database = database;
             this.table = table;
             this.column = column;
             this.primaryKey = primaryKey;
+            this.url = url;
+            this.username = username;
+            this.password = password;
+            this.databaseType = databaseType;
+            this.primaryKeyValue = primaryKeyValue;
         } else
             throw new IllegalArgumentException("Incorrect database params");
     }
@@ -81,5 +94,15 @@ public class Formula {
 
     public void setToDefault(){
         //TODO:
+    }
+
+    /**
+     * Метод для проверки того, что для подстановки значения в 2 формулы, нужен один Connection
+     * @param formula вторая формула
+     * @return true - имеет одинаковые параметры, false - нет
+     */
+    //TODO: добавить остальные поля
+    public Boolean hasEqualDatabaseConnection(Formula formula){
+        return this.url.equals(formula.url) && this.username.equals(formula.username) && this.password.equals(formula.password);
     }
 }
