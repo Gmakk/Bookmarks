@@ -19,6 +19,7 @@ import org.example.formula.FormulaParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.example.database.Access;
 
 /**
  * Replace text between w:bookmarkStarts and corresponding w:bookmarkEnds
@@ -45,9 +46,9 @@ public class BookmarksReplaceWithText {
     /**
      * Метод для подстановки значений на место закладок
      * @param paragraphs список параграфов документа
-     * @param data  значения имя_закладки - строка_подстановки
      */
-    public static void replaceBookmarkContents(List<Object> paragraphs,  Map<DataFieldName, String> data) throws Exception {
+    public static void replaceBookmarkContents(List<Object> paragraphs) throws Exception {
+        Access access = new Access();
 
         RangeFinder rt = new RangeFinder();
         new TraversalUtil(paragraphs, rt);
@@ -56,8 +57,6 @@ public class BookmarksReplaceWithText {
 
             // do we have data for this one?
             if (bm.getName()==null) continue;
-            String value = data.get(new DataFieldName(bm.getName()));
-            if (value==null) continue;
 
             // Can't just remove the object from the parent,
             // since in the parent, it may be wrapped in a JAXBElement
@@ -137,6 +136,8 @@ public class BookmarksReplaceWithText {
                 //если есть формула, то стилизация в соответствии с ее полями
                 FormulaParser parser = new FormulaParser();
                 parser.parse(formula);
+                String value = access.getData(parser);
+                //TODO: проверить пустые и некорректные значения
                 theList.add(insertIndex, createSubstitutionRun(parser,value));
 
             }
@@ -145,6 +146,8 @@ public class BookmarksReplaceWithText {
                 log.warn("Bookmark " + bm.getName() + " with formula " + formula + " doesn't appear to be valid; rangeStart=" + rangeStart + ", rangeEnd=" + rangeEnd + ". Probable cause: overlapping bookmarks or empty formula");
             }
         }
+
+        access.closeAllConnections();
     }
 
     /**

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Access {
     
-    private static final Map<Formula, Connection> connections = new HashMap<Formula, Connection>();
+    private final Map<Formula, Connection> connections = new HashMap<Formula, Connection>();
 
 
     /**
@@ -31,25 +31,24 @@ public class Access {
     }
 
     public String getData(Formula formula) throws SQLException {
-
-        //загрузка драйвера
-        //Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-
         //получение connection
         Connection connection = getConnection(formula);
         //подготовка запроса
-        String sqlCommand = "SELECT ? FROM ? WHERE ? = ? ";
-        PreparedStatement preparedStatement = connection.prepareStatement(sqlCommand);
-        preparedStatement.setString(1, formula.getColumn());
-        preparedStatement.setString(2, formula.getTable());
-        preparedStatement.setString(3, formula.getPrimaryKey());
-        preparedStatement.setString(4, formula.getPrimaryKeyValue());//TODO: проверить на числах
+//        String sqlCommand = "SELECT ? FROM ? WHERE ? = ?";
+//        PreparedStatement preparedStatement = connection.prepareStatement(sqlCommand);
+//        preparedStatement.setString(1, formula.getColumn());
+//        preparedStatement.setString(2, formula.getTable());
+//        preparedStatement.setString(3, formula.getPrimaryKey());
+//        preparedStatement.setString(4, formula.getPrimaryKeyValue());//TODO: проверить на числах
+
+        String sqlCommand = "SELECT " + formula.getColumn() + " FROM " + formula.getTable() + " WHERE " + formula.getPrimaryKey() + " = " + formula.getPrimaryKeyValue();
         //получение данных из бд
         try{
-        ResultSet resultSet = preparedStatement.executeQuery(sqlCommand);
-        return resultSet.getString(0);
+            //ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = connection.createStatement().executeQuery(sqlCommand);
+        if(resultSet.next())
+            return resultSet.getString(1);
         } catch(Exception ex){
-            System.out.println("Connection failed");
             System.out.println(ex);
         }
         return null;

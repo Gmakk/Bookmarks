@@ -150,6 +150,8 @@ public class MainSceneController implements Initializable {
 
         //TODO: заполнение combo box возможными бд
         //Обработка неправильно введенных данных бд, в том числе значения главного ключа(не нашли данные)
+        databaseTypeComboBox.getItems().add("postgresql");
+        databaseTypeComboBox.getSelectionModel().select(databaseTypeComboBox.getItems().indexOf("postgresql"));
     }
 
     /**
@@ -291,13 +293,13 @@ public class MainSceneController implements Initializable {
         }
         //подстановка по формулам
         //заполнение map закладка - текст_подстановки
-        Map<DataFieldName, String> replaceMap = new HashMap<DataFieldName, String>();
-        replaceMap.put( new DataFieldName("paragraph1"), "parChange1");
-        replaceMap.put( new DataFieldName("paragraph2"), "parChange2");
-        replaceMap.put( new DataFieldName("DOCX"), "ChangeDOCX1");
+//        Map<DataFieldName, String> replaceMap = new HashMap<DataFieldName, String>();
+//        replaceMap.put( new DataFieldName("paragraph1"), "parChange1");
+//        replaceMap.put( new DataFieldName("paragraph2"), "parChange2");
+//        replaceMap.put( new DataFieldName("DOCX"), "ChangeDOCX1");
         //замена текста закладки
         Body body = Files.getDocumentBody(wordMLPackage);
-        BookmarksReplaceWithText.replaceBookmarkContents(body.getContent(), replaceMap);
+        BookmarksReplaceWithText.replaceBookmarkContents(body.getContent());
 
         //сохранение документа
         //wordMLPackage.save(new File("C:\\Users\\krasi\\Desktop\\Programms\\Java\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));

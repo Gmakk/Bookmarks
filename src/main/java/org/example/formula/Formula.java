@@ -28,6 +28,7 @@ public class Formula {
     protected Boolean saveOldStyle = false;
 
     //форматирование - по умолчанию нет
+    //TODO: убрать?
     protected Boolean isHeader = false;//является ли текст заголовком
 
     //стилизация - по умолчанию нет

@@ -39,6 +39,10 @@ public class FormulaParser extends Formula{
         //тк параметры в формуле находятся в то же порядке, что и поля, то присваиваем i-тому полю значение i-того параметра
         //TODO:проверка валидности формулы
         for(int i=0;i<params.length;i++){
+            if(fields.get(i).getName().equals("primaryKeyValue")) {
+                fields.get(i).set(this,params[i]);
+                continue;
+            }
             if(params[i].equals("true") || params[i].equals("false"))
                 fields.get(i).set(this,Boolean.valueOf(params[i]));
             else if (params[i].matches("-?\\d+(\\.\\d+)?"))
