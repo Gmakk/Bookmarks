@@ -1,5 +1,7 @@
 package org.example.formula;
 
+import java.lang.reflect.Field;
+
 public class FormulaCalculator extends Formula {
     //Поля в формуле должны быть в том же порядке, что и в классе Formula!!!!!!!!!!
     public FormulaCalculator(){
@@ -11,76 +13,26 @@ public class FormulaCalculator extends Formula {
     public String calculate() {
         //проверка, заданы ли обязательные параметры
         if (checkMandatoryParams()){
-            //если нужно оставить старую стилизацию
-            if (saveOldStyle)
-                return calculateDatabaseString() + SPLIT + calculateOldStyleString();
-            else  {
-                return calculateDatabaseString() + SPLIT + calculateOldStyleString() + SPLIT+ calculateFormattingString() + SPLIT +
-                        calculateStyleString() + SPLIT + calculateFontString();
+            StringBuilder sb = new StringBuilder();
+            Field[] fields = Formula.class.getDeclaredFields();
+            //начинается со 2, тк первые 2 это разделители
+            for(int i = 2; i < fields.length; i++){
+                try {
+                    sb.append(fields[i].getName());
+                    sb.append(TITLE_SPLIT);
+                    sb.append(fields[i].get(this));
+
+                    //если нужно оставить старую стилизацию
+                    if (fields[i].getName().equals("saveOldStyle") && fields[i].get(this).equals(true))
+                        break;
+                }catch (IllegalAccessException ex){
+                    ex.printStackTrace();
+                }
+
+                if(i < fields.length - 1)
+                    sb.append(PARAM_SPLIT);
             }
+            return sb.toString();
         } else throw new IllegalStateException("Not all required parameters are set");
-    }
-
-    /**
-     * Метод проверяет, заданы ли обязательные параметры для создания формулы
-     * @return true - заданы, false - нет
-     */
-    private Boolean checkMandatoryParams(){
-        //база данных в любом случае должна быть задана
-        if(database.isBlank() || table.isBlank() || column.isBlank() || primaryKey.isBlank() || databaseType.isBlank()
-            || url.isBlank() || username.isBlank() || password.isBlank() || primaryKeyValue.isBlank())
-            return false;
-        //если сохраняется старая стилизация, то необходимо проверить только задание базы данных
-        if(saveOldStyle){
-            return true;
-        }else{
-            //проверяем все обязательные поля
-            //TODO: добавить остальные поля
-            if(font.isBlank() || fontSize == null || highlighting == null || color == null)
-                return false;
-            else
-                return true;
-        }
-    }
-
-    /**
-     * Метод вычисляет строку с параметрами БД для постановки в формулу
-     * @return вычисленная строка
-     */
-    private String calculateDatabaseString(){
-        return url + SPLIT + username + SPLIT + password + SPLIT + databaseType + SPLIT +
-                database + SPLIT + table + SPLIT + column + SPLIT + primaryKey + SPLIT + primaryKeyValue;
-    }
-
-    /**
-     * Метод вычисляет строку с параметрами БД для постановки в формулу
-     * @return вычисленная строка
-     */
-    private String calculateOldStyleString(){
-        return saveOldStyle.toString();
-    }
-
-    /**
-     * Метод вычисляет строку с параметрами форматирования для постановки в формулу
-     * @return вычисленная строка
-     */
-    private String calculateFormattingString(){
-        return isHeader.toString();
-    }
-
-    /**
-     * Метод вычисляет строку с параметрами стилизации для постановки в формулу
-     * @return вычисленная строка
-     */
-    private String calculateStyleString(){
-        return isCursive.toString() + SPLIT + isBald.toString() + SPLIT + highlighting + SPLIT + color;
-    }
-
-    /**
-     * Метод вычисляет строку с параметрами шрифта для постановки в формулу
-     * @return вычисленная строка
-     */
-    private String calculateFontString(){
-        return font + SPLIT + fontSize.toString();
     }
 }

@@ -1,6 +1,7 @@
 package org.example;
 
 import java.math.BigInteger;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +41,6 @@ public class BookmarksReplaceWithText {
     protected static Logger log = LoggerFactory.getLogger(BookmarksReplaceWithText.class);
 
     private static boolean DELETE_BOOKMARK = false;
-
-    private static org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
-
     /**
      * Метод для подстановки значений на место закладок
      * @param paragraphs список параграфов документа
@@ -157,12 +155,14 @@ public class BookmarksReplaceWithText {
      * @return созданный элемент
      */
     private static R createSubstitutionRun(Formula formula, String value){
+        org.docx4j.wml.ObjectFactory factory = Context.getWmlObjectFactory();
+
         org.docx4j.wml.R run = factory.createR();
         RPr rPr = factory.createRPr();
         RFonts fonts = factory.createRFonts();
         HpsMeasure hpsmeasure = factory.createHpsMeasure();//нужно для задания размера шрифта
         Color color = factory.createColor();
-        Highlight highlight = factory.createHighlight();
+
 
         String[] lines = value.split("\n");
         String lastLine = lines[lines.length - 1];
@@ -187,24 +187,30 @@ public class BookmarksReplaceWithText {
                 rPr.setI(new BooleanDefaultTrue());//курсив
             if(formula.getIsBald())
                 rPr.setB(new BooleanDefaultTrue());//жирный
+            if(formula.getIsUnderlined()){
+                U u = factory.createU();
+                u.setVal(org.docx4j.wml.UnderlineEnumeration.SINGLE);
+                rPr.setU(u);
+            }
             //выделение цветом
-            if(!formula.getHighlighting().equals("absent"))
+            if(!formula.getHighlighting().equals("absent")) {
+                Highlight highlight = factory.createHighlight();
                 highlight.setVal(formula.getHighlighting());
+                rPr.setHighlight(highlight);
+            }
             //цвет текста
             color.setVal(formula.getColor());//"#C0C0C0"
+            rPr.setColor(color);
             //устанавливаем шрифт
             fonts.setAscii(formula.getFont());//"Arial"
             fonts.setHAnsi(formula.getFont());//"Arial"
             fonts.setCs(formula.getFont());//"Arial"
+            rPr.setRFonts(fonts);
             //устанавливаем размер шрифта
             hpsmeasure.setVal(BigInteger.valueOf(formula.getFontSize() * 2));
-
+            rPr.setSz(hpsmeasure);
 
             run.setRPr(rPr);
-            rPr.setRFonts(fonts);
-            rPr.setSz(hpsmeasure);
-            rPr.setColor(color);
-            rPr.setHighlight(highlight);
 
             //TODO: устанавливать стиль вышестоящему параграфу? Подтягивать возможные стили из /word/styles.xml?
 //        //устанавливаем стиль заголовка

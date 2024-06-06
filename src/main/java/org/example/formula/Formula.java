@@ -6,7 +6,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Formula {
-    protected static final String SPLIT = "~";
+    //разделитель между параметрами в формуле
+    protected static final String PARAM_SPLIT = "~";
+    //разделитель между названием параметра и его значением
+    protected static final String TITLE_SPLIT = "->";
 
     public Formula(){
     }
@@ -16,9 +19,7 @@ public class Formula {
     protected String url = null;
     protected String username = null;
     protected String password = null;
-    protected String databaseType = null;
 
-    protected String database = null;
     protected String table = null;
     protected String column = null;
     protected String primaryKey = null;
@@ -34,6 +35,7 @@ public class Formula {
     //стилизация - по умолчанию нет
     protected Boolean isCursive = false;//курсив
     protected Boolean isBald = false;//выделен жирным
+    protected Boolean isUnderlined = false;//подчеркивание текста
     protected String highlighting = null;//желтые выделения   "Yellow", etc. "absent" - без выделения
     protected String color = null;//цвет текста  "Red", etc
 
@@ -54,18 +56,17 @@ public class Formula {
         this.saveOldStyle = saveOldStyle;
     }
 
-    public void setDatabaseParams(String url, String username, String password, String databaseType,
-                                  String database, String table, String column, String primaryKey, String primaryKeyValue){
-        if (!database.isBlank() && !table.isBlank() && !column.isBlank() && !primaryKey.isBlank()
+    public void setDatabaseParams(String url, String username, String password,
+                                  String table, String column, String primaryKey, String primaryKeyValue){
+        if (!table.isBlank() && !column.isBlank() && !primaryKey.isBlank()
                 && !url.isBlank() && !username.isBlank() && !password.isBlank()) {
-            this.database = database;
+
             this.table = table;
             this.column = column;
             this.primaryKey = primaryKey;
             this.url = url;
             this.username = username;
             this.password = password;
-            this.databaseType = databaseType;
             this.primaryKeyValue = primaryKeyValue;
         } else
             throw new IllegalArgumentException("Incorrect database params");
@@ -78,10 +79,11 @@ public class Formula {
             throw new IllegalArgumentException("At least one of arguments is null");
     }
 
-    public void setStyle(Boolean isCursive, Boolean isBald, String highlighting, String color){
-        if(isCursive != null && isBald != null && highlighting != null && color != null) {
+    public void setStyle(Boolean isCursive, Boolean isBald, Boolean isUnderlined, String highlighting, String color){
+        if(isCursive != null && isUnderlined != null && isBald != null && highlighting != null && color != null) {
             this.isCursive = isCursive;//курсив
             this.isBald = isBald;//выделен жирным
+            this.isUnderlined = isUnderlined;
             this.highlighting = highlighting;//желтые выделения
             this.color = color;//цвет текста
         } else
@@ -93,8 +95,26 @@ public class Formula {
         this.fontSize = fontSize;
     }
 
-    public void setToDefault(){
-        //TODO:
+    /**
+     * Метод проверяет, заданы ли обязательные параметры
+     * @return true - заданы, false - нет
+     */
+    public Boolean checkMandatoryParams(){
+        //база данных в любом случае должна быть задана
+        if(table.isBlank() || column.isBlank() || primaryKey.isBlank()
+                || url.isBlank() || username.isBlank() || password.isBlank() || primaryKeyValue.isBlank())
+            return false;
+        //если сохраняется старая стилизация, то необходимо проверить только задание базы данных
+        if(saveOldStyle){
+            return true;
+        }else{
+            //проверяем все обязательные поля
+            //TODO: добавить остальные поля
+            if(font.isBlank() || fontSize == null || highlighting == null || color == null)
+                return false;
+            else
+                return true;
+        }
     }
 
     /**

@@ -11,6 +11,7 @@ import javafx.stage.FileChooser;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 
@@ -53,8 +54,6 @@ public class MainSceneController implements Initializable {
     private TextArea logTextArea;
     //база данных
     @FXML
-    private TextField databaseField;
-    @FXML
     private TextField tableField;
     @FXML
     private TextField columnField;
@@ -68,13 +67,13 @@ public class MainSceneController implements Initializable {
     private TextField usernameTextField;
     @FXML
     private TextField passwordTextField;
-    @FXML
-    private ComboBox<String> databaseTypeComboBox;
     //стилизация
     @FXML
     private CheckBox cursiveCheckBox;
     @FXML
     private CheckBox baldCheckBox;
+    @FXML
+    private CheckBox underlinedCheckBox;
     @FXML
     private CheckBox highlightCheckBox;
     @FXML
@@ -150,8 +149,8 @@ public class MainSceneController implements Initializable {
 
         //TODO: заполнение combo box возможными бд
         //Обработка неправильно введенных данных бд, в том числе значения главного ключа(не нашли данные)
-        databaseTypeComboBox.getItems().add("postgresql");
-        databaseTypeComboBox.getSelectionModel().select(databaseTypeComboBox.getItems().indexOf("postgresql"));
+//        databaseTypeComboBox.getItems().add("postgresql");
+//        databaseTypeComboBox.getSelectionModel().select(databaseTypeComboBox.getItems().indexOf("postgresql"));
     }
 
     /**
@@ -177,23 +176,32 @@ public class MainSceneController implements Initializable {
     }
 
     /**
-     *  Выводит все закладки выбранного документа в виде выпадающего списка для последующего выбора
+     * Загружает выбранный документ и выводит все закладки выбранного документа в виде выпадающего списка для последующего выбора
      */
     @FXML
-    public void showDocBookmarksButtonPressed() throws Docx4JException {
+    public void showDocBookmarksButtonPressed(){
         if(!fileNameLabel.getText().isBlank()){
-            //открываем документ
-            wordMLPackage = WordprocessingMLPackage.load(new File(fileNameLabel.getText()));
+            try {
+                //открываем документ
+                wordMLPackage = WordprocessingMLPackage.load(new File(fileNameLabel.getText()));
+            }catch (Docx4JException ex){
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании документа, возможно он уже где-то открыт", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
             //загружаем закладки документа
             List<String> bookmarkNames = Files.getBookmarkNames(wordMLPackage);
-            if(bookmarkNames.isEmpty()){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "В документе нет закладок", ButtonType.OK);
+            if (bookmarkNames.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "В документе нет закладок", ButtonType.OK);
                 alert.showAndWait();
                 return;
             }
             bookmarksListComboBox.getItems().clear();
             bookmarksListComboBox.getItems().addAll(bookmarkNames);
             bookmarksListComboBox.setValue(bookmarkNames.get(0));
+            //очищает ранее заданные формулы для закладок
+            alterMap.clear();
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Для продолжения работы, необходимо выбрать файл", ButtonType.OK);
             alert.showAndWait();
@@ -201,46 +209,72 @@ public class MainSceneController implements Initializable {
     }
 
     /**
+     *  Добавляет в документ формулы к закладкам и сохраняет его
+     */
+    @FXML
+    public void fillDocumentButtonPressed(){
+        if(wordMLPackage == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
+        //добавление формул в невидимый элемент
+        Body body = Files.getDocumentBody(wordMLPackage);
+        BookmarksAlterWithFormula.alterBookmarkContent(body.getContent(),alterMap);
+
+        //сохранение документа
+        try {
+            wordMLPackage.save(new File(fileNameLabel.getText()));
+            log.info("Document has been saved with new formulas");
+            logTextArea.appendText("Document has been saved with new formulas\n");
+        }catch(Docx4JException ex){
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при сохранении документа, возможно он уже где-то открыт", ButtonType.OK);
+            alert.showAndWait();
+        }
+
+    }
+
+    /**
      * Заполняет map имя_закладки-формула чтобы потом их вместе внести в документ
      */
     @FXML
-    public void addFormulaButtonPressed() throws Exception {
+    public void addFormulaButtonPressed(){
         if(bookmarksListComboBox.getValue() == null){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала выбрать закладку, загрузите для этого документ", ButtonType.OK);
             alert.showAndWait();
             return;
         }
-        if(databaseField.getText().isBlank() || tableField.getText().isBlank() ||
-                columnField.getText().isBlank() || primaryKeyField.getText().isBlank()){
+
+        DataFieldName bookmarkName = new DataFieldName(bookmarksListComboBox.getValue());
+        //если формула для этой закладки уже существует, то заменяется на новую
+        alterMap.remove(bookmarkName);
+
+        //задание параметров для формулы
+        //база данных
+        try {
+            calculator.setDatabaseParams(urlTextField.getText(), usernameTextField.getText(), passwordTextField.getText(),
+                    tableField.getText(), columnField.getText(), primaryKeyField.getText(), primaryKeyValueField.getText());
+        }catch (IllegalArgumentException ex){
+            System.out.println(ex);
             Alert alert = new Alert(Alert.AlertType.ERROR, "Поля базы данных не должны быть пустыми", ButtonType.OK);
             alert.showAndWait();
             return;
         }
-
-
-        DataFieldName dataFieldName = new DataFieldName(bookmarksListComboBox.getValue());
-        //если формула для этой закладки уже существует, то заменяется на новую
-        alterMap.remove(dataFieldName);
-
-        //задание параметров для формулы
-        //база данных
-        calculator.setDatabaseParams(urlTextField.getText(),usernameTextField.getText(),passwordTextField.getText(),databaseTypeComboBox.getValue(),
-                databaseField.getText(),tableField.getText(),columnField.getText(),primaryKeyField.getText(),primaryKeyValueField.getText());
         //шрифт
         calculator.setFont(fontComboBox.getValue(),fontSizeSpinner.getValue());
         //стилизация
         if(highlightCheckBox.isSelected())//если нужно выделить текст
-            calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),
+            calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),underlinedCheckBox.isSelected(),
                     highlightColors.get(highlightComboBox.getValue()), textColors.get(colorComboBox.getValue()));
         else//если выделение не требуется
-            calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),
+            calculator.setStyle(cursiveCheckBox.isSelected(),baldCheckBox.isSelected(),underlinedCheckBox.isSelected(),
                     "absent", textColors.get(colorComboBox.getValue()));
         //сохранять ли старый стиль текста при подстановке
         calculator.setOldStyle(oldStyleCheckBox.isSelected());
 
-
         //добавление формулы в map, для последующего отображения в файле
-        alterMap.put(dataFieldName, calculator.calculate());
+        alterMap.put(bookmarkName, calculator.calculate());
         logTextArea.appendText("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue() + "\n");
         log.info("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue());
     }
@@ -250,71 +284,52 @@ public class MainSceneController implements Initializable {
      * @throws Exception
      */
     @FXML
-    public void clearFormulasButtonPressed() throws Exception {
+    public void clearFormulasButtonPressed(){
         alterMap.clear();
         logTextArea.appendText("List of formulas has been cleared\n");
         log.info("List of formulas has been cleared");
     }
 
     /**
-     *  Добавляет в документ формулы к закладкам и сохраняет его
-     */
-    @FXML
-    public void fillDocumentButtonPressed() throws Exception {
-        if(wordMLPackage == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
-            alert.showAndWait();
-            return;
-        }
-        //добавление формул в невидимый элемент
-        Body body = Files.getDocumentBody(wordMLPackage);
-        BookmarksAlterWithFormula.alterBookmarkContent(body.getContent(),alterMap);
-        log.info("Previously created formulas have been added to the document");
-        logTextArea.appendText("Previously created formulas have been added to the document\n");
-
-        //сохранение документа
-        //wordMLPackage.save(new File("C:\\Users\\krasi\\Desktop\\Programms\\Java\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
-        //wordMLPackage.save(new File("C:\\Users\\krasi\\IdeaProjects\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
-        wordMLPackage.save(new File(fileNameLabel.getText()));
-        //TODO: Сохранить отдельный файл или изменять существующий
-        log.info("Document has been saved");
-        logTextArea.appendText("Document has been saved\n");
-    }
-
-    /**
      * Подставляет в документ значения в соответствии с заданными в нем формулами
      */
     @FXML
-    public void  fillInDocumentButtonPressed() throws Exception {
+    public void  fillInDocumentButtonPressed(){
         if(wordMLPackage == null){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
             alert.showAndWait();
             return;
         }
-        //подстановка по формулам
-        //заполнение map закладка - текст_подстановки
-//        Map<DataFieldName, String> replaceMap = new HashMap<DataFieldName, String>();
-//        replaceMap.put( new DataFieldName("paragraph1"), "parChange1");
-//        replaceMap.put( new DataFieldName("paragraph2"), "parChange2");
-//        replaceMap.put( new DataFieldName("DOCX"), "ChangeDOCX1");
-        //замена текста закладки
-        Body body = Files.getDocumentBody(wordMLPackage);
-        BookmarksReplaceWithText.replaceBookmarkContents(body.getContent());
 
-        //сохранение документа
-        //wordMLPackage.save(new File("C:\\Users\\krasi\\Desktop\\Programms\\Java\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
-        //wordMLPackage.save(new File("C:\\Users\\krasi\\IdeaProjects\\Bookmarks\\src\\main\\java\\org\\example\\templates\\RESULT.docx"));
-        wordMLPackage.save(new File(fileNameLabel.getText()));
-        //TODO: Сохранить отдельный файл или изменять существующий
-        log.info("Document has been saved");
-        logTextArea.appendText("Document has been saved\n");
+        try {
+            Body body = Files.getDocumentBody(wordMLPackage);
+            //замена текста закладки
+            BookmarksReplaceWithText.replaceBookmarkContents(body.getContent());
+            //сохранение документа
+            wordMLPackage.save(new File(fileNameLabel.getText()));
+            log.info("Document has been saved with new content");
+            logTextArea.appendText("Document has been saved with new content\n");
+        }catch (SQLException sqlException){
+            sqlException.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании данных из бд", ButtonType.OK);
+            alert.showAndWait();
+        }catch (Docx4JException ex){
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании документа, возможно он уже где-то открыт", ButtonType.OK);
+            alert.showAndWait();
+        }catch (Exception ex){
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "В документе содержится закладка с некорректной формулой", ButtonType.OK);
+            alert.showAndWait();
+        }
+
     }
 
     /**
      * Делает видимым выбор цвета выделения, если активен соответствующий чек-бокс
      */
     @FXML
-    private void highlightCheckBoxPressed() throws Exception {
+    private void highlightCheckBoxPressed(){
         highlightComboBox.setVisible(highlightCheckBox.isSelected());
     }
 }

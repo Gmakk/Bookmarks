@@ -25,7 +25,7 @@ public class BookmarksAlterWithFormula {
      * @param paragraphs список параграфов документа
      * @param data  значения имя_закладки - формула
      */
-    public static void alterBookmarkContent(List<Object> paragraphs, Map<DataFieldName, String> data) throws Exception {
+    public static void alterBookmarkContent(List<Object> paragraphs, Map<DataFieldName, String> data){
 
         RangeFinder rt = new RangeFinder();
         new TraversalUtil(paragraphs, rt);

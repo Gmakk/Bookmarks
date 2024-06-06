@@ -16,7 +16,7 @@ import java.util.List;
 public class Files {
     protected static Logger log = LoggerFactory.getLogger(Files.class);
 
-    public static List<String> getBookmarkNames(WordprocessingMLPackage wordMLPackage) throws Docx4JException {
+    public static List<String> getBookmarkNames(WordprocessingMLPackage wordMLPackage){
         Body body = getDocumentBody(wordMLPackage);
 
         RangeFinder rt = new RangeFinder();
@@ -31,12 +31,12 @@ public class Files {
         return result;
     }
 
-    public static Body getDocumentBody(WordprocessingMLPackage wordMLPackage) throws Docx4JException {
+    public static Body getDocumentBody(WordprocessingMLPackage wordMLPackage){
 
         // Получаем главную часть документа
         MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();
 
-        org.docx4j.wml.Document wmlDocumentEl = (org.docx4j.wml.Document) mainDocumentPart.getJaxbElement();//????????
+        org.docx4j.wml.Document wmlDocumentEl = mainDocumentPart.getJaxbElement();
         return wmlDocumentEl.getBody();
     }
 }
