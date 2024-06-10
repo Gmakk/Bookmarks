@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 
+import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.docx4j.model.fields.merge.DataFieldName;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -23,12 +24,17 @@ import org.docx4j.wml.Body;
 import org.example.BookmarksReplaceWithText;
 import org.example.Files;
 import org.example.BookmarksAlterWithFormula;
+import org.example.database.config.Configuration;
+import org.example.database.config.Properties;
 import org.example.formula.FormulaCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //TODO: добавить очистку документа от формул
 public class MainSceneController implements Initializable {
+    @Getter
+    private static MainSceneController instance;
+
     protected static Logger log = LoggerFactory.getLogger(MainSceneController.class);
 
     private static final FormulaCalculator calculator = new FormulaCalculator();
@@ -66,6 +72,8 @@ public class MainSceneController implements Initializable {
     private TextField usernameTextField;
     @FXML
     private TextField passwordTextField;
+    @FXML
+    private ComboBox<String> configsComboBox;
     //стилизация
     @FXML
     private CheckBox cursiveCheckBox;
@@ -94,6 +102,7 @@ public class MainSceneController implements Initializable {
     //заполнение элементов сцены данными перед показом
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        instance = this;
         //заполняется combo box с доступными шрифтами и по умолчанию выбирается Times New Roman
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         String[] fontNames = ge.getAvailableFontFamilyNames();
@@ -146,10 +155,7 @@ public class MainSceneController implements Initializable {
         highlightComboBox.getItems().addAll(highlightColorList);
         highlightComboBox.getSelectionModel().select(highlightColorList.indexOf("Yellow"));
 
-        //TODO: заполнение combo box возможными бд
-        //Обработка неправильно введенных данных бд, в том числе значения главного ключа(не нашли данные)
-//        databaseTypeComboBox.getItems().add("postgresql");
-//        databaseTypeComboBox.getSelectionModel().select(databaseTypeComboBox.getItems().indexOf("postgresql"));
+        updateAvailableConfigs();
     }
 
     /**
@@ -251,13 +257,19 @@ public class MainSceneController implements Initializable {
         //задание параметров для формулы
         //база данных
         try {
-            calculator.setDatabaseParams(urlTextField.getText(), usernameTextField.getText(), passwordTextField.getText(),
+            Configuration configuration = Configuration.getInstance();
+            Properties properties = configuration.getConfig(configsComboBox.getValue());
+            calculator.setDatabaseParams(properties.getUrl(), properties.getUsername(), properties.getPassword(),
                     tableField.getText(), columnField.getText(), primaryKeyField.getText(), primaryKeyValueField.getText());
         }catch (IllegalArgumentException ex){
             log.info(Arrays.toString(ex.getStackTrace()));
             Alert alert = new Alert(Alert.AlertType.ERROR, "Поля базы данных не должны быть пустыми", ButtonType.OK);
             alert.showAndWait();
             return;
+        }catch (Exception ex){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            alert.showAndWait();
+            log.info(Arrays.toString(ex.getStackTrace()));
         }
         //шрифт
         calculator.setFont(fontComboBox.getValue(),fontSizeSpinner.getValue());
@@ -335,12 +347,39 @@ public class MainSceneController implements Initializable {
     @FXML
     private void addConfigButtonPressed(){
         SceneManager.addSceneOnNewAdditionalStage("addConfig",500.0,300.0);
-        //TODO:Обновить в интерфейсе доступные конфиги
     }
 
     @FXML
     private void deleteConfigButtonPressed(){
         SceneManager.addSceneOnNewAdditionalStage("deleteConfig",500.0,300.0);
-        //TODO:Обновить в интерфейсе доступные конфиги
+    }
+
+    @FXML
+    private void configurationSelected() {
+        try {
+            Configuration configuration = Configuration.getInstance();
+            if(configsComboBox.getValue()!=null) {
+                Properties properties = configuration.getConfig(configsComboBox.getValue());
+                urlTextField.setText(properties.getUrl());
+                usernameTextField.setText(properties.getUsername());
+                passwordTextField.setText(properties.getPassword());
+            }
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            alert.showAndWait();
+            log.info("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
+        }
+    }
+
+    public void updateAvailableConfigs(){
+        try {
+            Configuration configuration = Configuration.getInstance();
+            configsComboBox.getItems().clear();
+            configsComboBox.getItems().addAll(configuration.getConfigNames());
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            alert.showAndWait();
+            log.info("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
+        }
     }
 }

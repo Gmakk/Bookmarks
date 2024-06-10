@@ -39,18 +39,18 @@ public class SceneManager {
      * @param height высота сцены
      */
     private static void setSceneOnStage(String sceneName,Stage stage, Double width, Double height){
-            try {
-                //загрузка нового FXML файла
-                FXMLLoader loader = new FXMLLoader();
-                URL xmlUrl = SceneManager.class.getResource("/scenes/" + sceneName + ".fxml");
-                loader.setLocation(xmlUrl);
-                Parent root = loader.load();
-                //создание из него сцены
-                Scene scene = new Scene(root, width, height);
-                stage.setScene(scene);
-            }catch (IOException ex){
-                log.info(Arrays.toString(ex.getStackTrace()));
-            }
+        try {
+            //загрузка нового FXML файла
+            FXMLLoader loader = new FXMLLoader();
+            URL xmlUrl = SceneManager.class.getResource("/scenes/" + sceneName + ".fxml");
+            loader.setLocation(xmlUrl);
+            Parent root = loader.load();
+            //создание из него сцены
+            Scene scene = new Scene(root, width, height);
+            stage.setScene(scene);
+        }catch (IOException ex){
+            log.info(Arrays.toString(ex.getStackTrace()));
+        }
     }
 
     public static void setSceneOnPrimaryStage(String sceneName){
@@ -65,6 +65,7 @@ public class SceneManager {
     public static void addSceneOnNewAdditionalStage(String name, Double width, Double height){
         if(!additionalStages.containsKey(name)) {
             Stage newStage = new Stage();
+            newStage.setTitle(name);
             additionalStages.put(name,newStage);
         }
         setSceneOnStage(name,additionalStages.get(name),width,height);

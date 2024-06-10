@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import lombok.Setter;
 import org.example.database.config.Configuration;
 import org.example.database.config.Properties;
 import org.slf4j.Logger;
@@ -32,8 +33,10 @@ public class AddConfigController {
         try {
             Configuration configuration = Configuration.getInstance();
             configuration.addConfig(titleTextField.getText(), new Properties(urlTextField.getText(), usernameTextField.getText(), passwordTextField.getText()));
+            MainSceneController.getInstance().updateAvailableConfigs();
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Информация о подключении к бд добавлена", ButtonType.OK);
             alert.showAndWait();
+            //проверяется возможность подключения с такими параметрами
             Properties properties = configuration.getConfig(titleTextField.getText());
             Connection connection = DriverManager.getConnection(properties.getUrl(), properties.getUsername(), properties.getPassword());
             if (connection == null) {

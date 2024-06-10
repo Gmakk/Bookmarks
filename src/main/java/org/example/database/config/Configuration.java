@@ -1,5 +1,7 @@
 package org.example.database.config;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import java.util.List;
 
 public class Configuration {
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
+
     private HashMap<String, Properties> configs = new HashMap<>();//таблица название-свойства_подключения
 
     private static File configFile = new File(System.getProperty("user.dir") +
