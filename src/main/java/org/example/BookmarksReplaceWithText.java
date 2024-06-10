@@ -12,6 +12,7 @@ import org.docx4j.XmlUtils;
 import org.docx4j.finders.RangeFinder;
 import org.docx4j.jaxb.Context;
 import org.docx4j.model.fields.merge.DataFieldName;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.wml.*;
@@ -41,9 +42,12 @@ public class BookmarksReplaceWithText {
     protected static Logger log = LoggerFactory.getLogger(BookmarksReplaceWithText.class);
 
     private static boolean DELETE_BOOKMARK = false;
+
     /**
      * Метод для подстановки значений на место закладок
      * @param paragraphs список параграфов документа
+     * @throws SQLException Произошла ошибка при считывании данных из бд
+     * @throws Exception В документе содержится закладка с некорректной формулой
      */
     public static void replaceBookmarkContents(List<Object> paragraphs) throws Exception {
         Access access = new Access();
@@ -122,7 +126,7 @@ public class BookmarksReplaceWithText {
                     else if (obj instanceof CTMarkupRange)  // We found the end of an overlapping bookmark
                     {
                         log.warn("Overlapping bookmarks detected: " + bm.getName() + " and " + ((CTMarkupRange)obj).getId());
-                        insertIndex++;
+                        //insertIndex++;
                     }
                     else
                     {
@@ -130,8 +134,6 @@ public class BookmarksReplaceWithText {
                     }
                 }
 
-                //TODO: передавать в этот метод не значение для подстановки, а брать его здесь из бд по формуле
-                //если есть формула, то стилизация в соответствии с ее полями
                 FormulaParser parser = new FormulaParser();
                 parser.parse(formula);
                 String value = access.getData(parser);

@@ -1,9 +1,11 @@
 package org.example.formula;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 public class FormulaCalculator extends Formula {
-    //Поля в формуле должны быть в том же порядке, что и в классе Formula!!!!!!!!!!
+    private static final Logger log = Logger.getLogger(FormulaCalculator.class.getName());
     public FormulaCalculator(){
     }
     /**
@@ -26,7 +28,7 @@ public class FormulaCalculator extends Formula {
                     if (fields[i].getName().equals("saveOldStyle") && fields[i].get(this).equals(true))
                         break;
                 }catch (IllegalAccessException ex){
-                    ex.printStackTrace();
+                    log.info(Arrays.toString(ex.getStackTrace()));
                 }
 
                 if(i < fields.length - 1)

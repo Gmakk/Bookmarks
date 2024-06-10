@@ -1,7 +1,10 @@
 package org.example;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.docx4j.model.fields.merge.DataFieldName;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
@@ -25,13 +28,28 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         //отключаем возможность изменять размер окна
         primaryStage.setResizable(false);
+        primaryStage.setWidth(1000.0);
+        primaryStage.setHeight(600.0);
         //устанавливаем название
         primaryStage.setTitle("Formula calculator");
         //задаем Stage, в который будут устанавливаться нужные сцены
         SceneManager.setPrimaryStage(primaryStage);
         //включаем первую сцену
-        SceneManager.setMainScene();
+        SceneManager.setSceneOnPrimaryStage("main");
         primaryStage.show();
+
+        primaryStage.setOnHiding(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        SceneManager.closeAdditionalStages();
+                        System.exit(0);
+                    }
+                });
+            }
+        });
     }
 
     public static void main(String[] args) throws Exception {

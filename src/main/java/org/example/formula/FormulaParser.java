@@ -17,7 +17,7 @@ public class FormulaParser extends Formula{
      * @param formula формула для разбора
      * @throws IllegalArgumentException если формула не соответствует шаблону
      */
-    public void parse(String formula) throws Exception{
+    public void parse(String formula){
         //регулярное выражение для разделения формулы на параметры, находящиеся между разделительным знаком
         if(formula == null || formula.isBlank())
             throw new IllegalArgumentException("formula is blank or null");
@@ -44,10 +44,10 @@ public class FormulaParser extends Formula{
                     currentField.set(this, paramValue);
 
             } catch (NoSuchFieldException ex) {
-                System.err.println("Field " + paramName + " not found");
-                ex.printStackTrace();
+                System.err.println();
+                log.info("Field " + paramName + " not found\n" + Arrays.toString(ex.getStackTrace()));
             } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
+                log.info(Arrays.toString(ex.getStackTrace()));
             }
         }
 

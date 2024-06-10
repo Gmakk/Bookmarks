@@ -27,7 +27,6 @@ import org.example.formula.FormulaCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//TODO: добавить взаимодействие с несколькими типами бд из выпадающего списка
 //TODO: добавить очистку документа от формул
 public class MainSceneController implements Initializable {
     protected static Logger log = LoggerFactory.getLogger(MainSceneController.class);
@@ -185,8 +184,8 @@ public class MainSceneController implements Initializable {
                 //открываем документ
                 wordMLPackage = WordprocessingMLPackage.load(new File(fileNameLabel.getText()));
             }catch (Docx4JException ex){
-                ex.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании документа, возможно он уже где-то открыт", ButtonType.OK);
+                log.info(Arrays.toString(ex.getStackTrace()));
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании документа", ButtonType.OK);
                 alert.showAndWait();
                 return;
             }
@@ -212,7 +211,7 @@ public class MainSceneController implements Initializable {
      *  Добавляет в документ формулы к закладкам и сохраняет его
      */
     @FXML
-    public void fillDocumentButtonPressed(){
+    public void fillDocumentWithFormulasButtonPressed(){
         if(wordMLPackage == null){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
             alert.showAndWait();
@@ -225,10 +224,9 @@ public class MainSceneController implements Initializable {
         //сохранение документа
         try {
             wordMLPackage.save(new File(fileNameLabel.getText()));
-            log.info("Document has been saved with new formulas");
             logTextArea.appendText("Document has been saved with new formulas\n");
         }catch(Docx4JException ex){
-            ex.printStackTrace();
+            log.info(Arrays.toString(ex.getStackTrace()));
             Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при сохранении документа, возможно он уже где-то открыт", ButtonType.OK);
             alert.showAndWait();
         }
@@ -256,7 +254,7 @@ public class MainSceneController implements Initializable {
             calculator.setDatabaseParams(urlTextField.getText(), usernameTextField.getText(), passwordTextField.getText(),
                     tableField.getText(), columnField.getText(), primaryKeyField.getText(), primaryKeyValueField.getText());
         }catch (IllegalArgumentException ex){
-            System.out.println(ex);
+            log.info(Arrays.toString(ex.getStackTrace()));
             Alert alert = new Alert(Alert.AlertType.ERROR, "Поля базы данных не должны быть пустыми", ButtonType.OK);
             alert.showAndWait();
             return;
@@ -276,25 +274,22 @@ public class MainSceneController implements Initializable {
         //добавление формулы в map, для последующего отображения в файле
         alterMap.put(bookmarkName, calculator.calculate());
         logTextArea.appendText("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue() + "\n");
-        log.info("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue());
     }
 
     /**
      * удаляет подготовленные к внесению документ формулы из списка
-     * @throws Exception
      */
     @FXML
     public void clearFormulasButtonPressed(){
         alterMap.clear();
         logTextArea.appendText("List of formulas has been cleared\n");
-        log.info("List of formulas has been cleared");
     }
 
     /**
      * Подставляет в документ значения в соответствии с заданными в нем формулами
      */
     @FXML
-    public void  fillInDocumentButtonPressed(){
+    public void  fillInDocumentWithDataButtonPressed(){
         if(wordMLPackage == null){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
             alert.showAndWait();
@@ -307,18 +302,17 @@ public class MainSceneController implements Initializable {
             BookmarksReplaceWithText.replaceBookmarkContents(body.getContent());
             //сохранение документа
             wordMLPackage.save(new File(fileNameLabel.getText()));
-            log.info("Document has been saved with new content");
             logTextArea.appendText("Document has been saved with new content\n");
         }catch (SQLException sqlException){
-            sqlException.printStackTrace();
+            log.info(Arrays.toString(sqlException.getStackTrace()));
             Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании данных из бд", ButtonType.OK);
             alert.showAndWait();
         }catch (Docx4JException ex){
-            ex.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании документа, возможно он уже где-то открыт", ButtonType.OK);
+            log.info(Arrays.toString(ex.getStackTrace()));
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при сохранении документа, возможно он уже где-то открыт", ButtonType.OK);
             alert.showAndWait();
         }catch (Exception ex){
-            ex.printStackTrace();
+            log.info(Arrays.toString(ex.getStackTrace()));
             Alert alert = new Alert(Alert.AlertType.ERROR, "В документе содержится закладка с некорректной формулой", ButtonType.OK);
             alert.showAndWait();
         }
@@ -331,5 +325,22 @@ public class MainSceneController implements Initializable {
     @FXML
     private void highlightCheckBoxPressed(){
         highlightComboBox.setVisible(highlightCheckBox.isSelected());
+    }
+
+    @FXML
+    private void closeButtonPressed(){
+        SceneManager.closeMainStage();
+    }
+
+    @FXML
+    private void addConfigButtonPressed(){
+        SceneManager.addSceneOnNewAdditionalStage("addConfig",500.0,300.0);
+        //TODO:Обновить в интерфейсе доступные конфиги
+    }
+
+    @FXML
+    private void deleteConfigButtonPressed(){
+        SceneManager.addSceneOnNewAdditionalStage("deleteConfig",500.0,300.0);
+        //TODO:Обновить в интерфейсе доступные конфиги
     }
 }

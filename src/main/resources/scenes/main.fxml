@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="403.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
    <children>
-      <TabPane id="tabPane" layoutX="37.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane id="tabPane" layoutX="37.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
         <tabs>
           <Tab text="Настройка закладки">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="732.0">
                      <children>
-                        <Button fx:id="fillInDocumentButtonPressed" layoutX="241.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillInDocumentButtonPressed" text="Подставить значения в документ" />
+                        <Button layoutX="301.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillInDocumentWithDataButtonPressed" text="Подставить значения в документ" />
                         <ComboBox fx:id="bookmarksListComboBox" layoutX="76.0" layoutY="122.0" prefWidth="150.0" />
                         <Label layoutX="287.0" layoutY="127.0" text="Выберите закладку из списка" />
                         <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="18.0" prefWidth="491.0" visible="false" />
                         <Button fx:id="chooseDocButton" layoutX="76.0" layoutY="17.0" mnemonicParsing="false" onAction="#chooseDocButtonPressed" text="Выбрать документ" />
                         <Button layoutX="76.0" layoutY="67.0" mnemonicParsing="false" onAction="#showDocBookmarksButtonPressed" text="Загрузить закладки документа" />
-                        <Button layoutX="76.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillDocumentButtonPressed" text="Заполнить документ" />
+                        <Button layoutX="76.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillDocumentWithFormulasButtonPressed" text="Заполнить документ формулами" />
                         <Label layoutX="41.0" layoutY="14.0" text="1">
                            <font>
                               <Font size="20.0" />
@@ -95,10 +96,37 @@
                          <Label layoutX="490.0" layoutY="135.0" text="Размер шрифта" />
                          <Spinner fx:id="fontSizeSpinner" editable="true" layoutX="490.0" layoutY="165.0" />
                          <Label layoutX="489.0" layoutY="29.0" text="Шрифт" />
+                        <ColorPicker layoutX="240.0" layoutY="290.0" />
                      </children></AnchorPane>
                 </content>
             </Tab>
         </tabs>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
       </TabPane>
+      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#closeButtonPressed" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Config">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#addConfigButtonPressed" text="Add" />
+              <MenuItem mnemonicParsing="false" onAction="#deleteConfigButtonPressed" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </MenuBar>
    </children>
 </AnchorPane>
