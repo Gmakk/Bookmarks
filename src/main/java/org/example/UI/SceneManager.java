@@ -65,6 +65,7 @@ public class SceneManager {
     public static void addSceneOnNewAdditionalStage(String name, Double width, Double height){
         if(!additionalStages.containsKey(name)) {
             Stage newStage = new Stage();
+            newStage.setResizable(false);
             newStage.setTitle(name);
             additionalStages.put(name,newStage);
         }

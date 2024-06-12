@@ -1,5 +1,8 @@
 package org.example.UI;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -52,11 +55,13 @@ public class MainSceneController implements Initializable {
     @FXML
     private Label fileNameLabel;
     @FXML
-    private ComboBox<String> bookmarksListComboBox;
+    private ListView<String> bookmarksListView;
     @FXML
     private CheckBox oldStyleCheckBox;
     @FXML
     private TextArea logTextArea;
+    @FXML
+    private TextField searchTextField;
     //база данных
     @FXML
     private TextField tableField;
@@ -175,7 +180,7 @@ public class MainSceneController implements Initializable {
             }
             fileNameLabel.setText(file.getAbsolutePath());
             fileNameLabel.setVisible(true);
-            bookmarksListComboBox.getItems().clear();
+            bookmarksListView.getItems().clear();
             wordMLPackage = null;
         }
     }
@@ -202,9 +207,17 @@ public class MainSceneController implements Initializable {
                 alert.showAndWait();
                 return;
             }
-            bookmarksListComboBox.getItems().clear();
-            bookmarksListComboBox.getItems().addAll(bookmarkNames);
-            bookmarksListComboBox.setValue(bookmarkNames.get(0));
+
+            ObservableList<String> observableBookmarkNames
+                    = FXCollections.observableArrayList(bookmarkNames);
+            FilteredList<String> filteredBookmarkNames = new FilteredList(observableBookmarkNames, p -> true);
+
+            searchTextField.textProperty().addListener((obs, oldValue, newValue) -> {
+                filteredBookmarkNames.setPredicate(name -> name.toLowerCase().contains(newValue.toLowerCase().trim()));
+            });
+
+
+            bookmarksListView.setItems(filteredBookmarkNames);
             //очищает ранее заданные формулы для закладок
             alterMap.clear();
         }else {
@@ -244,13 +257,14 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     public void addFormulaButtonPressed(){
-        if(bookmarksListComboBox.getValue() == null){
+        if(bookmarksListView.getSelectionModel().getSelectedItems().size() != 1){
             Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала выбрать закладку, загрузите для этого документ", ButtonType.OK);
             alert.showAndWait();
             return;
         }
 
-        DataFieldName bookmarkName = new DataFieldName(bookmarksListComboBox.getValue());
+        //так как по умолчанию можно выбрать только 1 элемент, то берем первый
+        DataFieldName bookmarkName = new DataFieldName(bookmarksListView.getSelectionModel().getSelectedItems().get(0));
         //если формула для этой закладки уже существует, то заменяется на новую
         alterMap.remove(bookmarkName);
 
@@ -285,7 +299,7 @@ public class MainSceneController implements Initializable {
 
         //добавление формулы в map, для последующего отображения в файле
         alterMap.put(bookmarkName, calculator.calculate());
-        logTextArea.appendText("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListComboBox.getValue() + "\n");
+        logTextArea.appendText("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListView.getSelectionModel().getSelectedItems().get(0) + "\n");
     }
 
     /**

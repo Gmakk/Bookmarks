@@ -12,7 +12,7 @@
        <TextField fx:id="urlTextField" layoutX="296.0" layoutY="66.0" text="jdbc:postgresql://localhost/bookmarks" />
        <TextField fx:id="usernameTextField" layoutX="296.0" layoutY="126.0" text="postgres" />
        <TextField fx:id="passwordTextField" layoutX="296.0" layoutY="184.0" text="G4s7Zd6h2" />
-      <TextField fx:id="titleTextField" layoutX="30.0" layoutY="134.0" text="Test Config" />
+      <TextField fx:id="titleTextField" layoutX="30.0" layoutY="134.0" text="MySQL" />
       <Label layoutX="30.0" layoutY="101.0" text="Название конфигурации" />
    </children>
 </AnchorPane>

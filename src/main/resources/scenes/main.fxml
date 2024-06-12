@@ -13,13 +13,12 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="732.0">
                      <children>
-                        <Button layoutX="301.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillInDocumentWithDataButtonPressed" text="Подставить значения в документ" />
-                        <ComboBox fx:id="bookmarksListComboBox" layoutX="76.0" layoutY="122.0" prefWidth="150.0" />
-                        <Label layoutX="287.0" layoutY="127.0" text="Выберите закладку из списка" />
+                        <Button layoutX="301.0" layoutY="484.0" mnemonicParsing="false" onAction="#fillInDocumentWithDataButtonPressed" text="Подставить значения в документ" />
+                        <Label layoutX="293.0" layoutY="240.0" text="Выберите закладку из списка" />
                         <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="18.0" prefWidth="491.0" visible="false" />
                         <Button fx:id="chooseDocButton" layoutX="76.0" layoutY="17.0" mnemonicParsing="false" onAction="#chooseDocButtonPressed" text="Выбрать документ" />
                         <Button layoutX="76.0" layoutY="67.0" mnemonicParsing="false" onAction="#showDocBookmarksButtonPressed" text="Загрузить закладки документа" />
-                        <Button layoutX="76.0" layoutY="297.0" mnemonicParsing="false" onAction="#fillDocumentWithFormulasButtonPressed" text="Заполнить документ формулами" />
+                        <Button layoutX="76.0" layoutY="484.0" mnemonicParsing="false" onAction="#fillDocumentWithFormulasButtonPressed" text="Заполнить документ формулами" />
                         <Label layoutX="41.0" layoutY="14.0" text="1">
                            <font>
                               <Font size="20.0" />
@@ -30,32 +29,35 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="41.0" layoutY="120.0" text="3">
+                        <Label layoutX="41.0" layoutY="118.0" text="3">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="41.0" layoutY="178.0" text="4">
+                        <Label layoutX="41.0" layoutY="365.0" text="4">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="41.0" layoutY="294.0" text="6" textFill="RED">
+                        <Label layoutX="41.0" layoutY="481.0" text="6" textFill="RED">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="76.0" layoutY="173.0" prefHeight="39.0" prefWidth="180.0" text="Заполните данные во вкладках или оставьте старые" wrapText="true" />
-                        <Label layoutX="41.0" layoutY="235.0" text="5">
+                        <Label layoutX="76.0" layoutY="360.0" prefHeight="39.0" prefWidth="180.0" text="Заполните данные во вкладках или оставьте старые" wrapText="true" />
+                        <Label layoutX="41.0" layoutY="422.0" text="5">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Button layoutX="76.0" layoutY="238.0" mnemonicParsing="false" onAction="#addFormulaButtonPressed" text="Добавить формулу к закладке" />
-                        <Button layoutX="285.0" layoutY="237.0" mnemonicParsing="false" onAction="#clearFormulasButtonPressed" text="Очистить заданные формулы" />
-                        <CheckBox fx:id="oldStyleCheckBox" layoutX="285.0" layoutY="184.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="151.0" text="Не менять стилизацию" />
-                        <TextArea fx:id="logTextArea" editable="false" layoutX="515.0" layoutY="78.0" prefHeight="200.0" prefWidth="200.0" />
-                        <Label layoutX="515.0" layoutY="57.0" text="Отчет о работе:" />
+                        <Button layoutX="76.0" layoutY="425.0" mnemonicParsing="false" onAction="#addFormulaButtonPressed" text="Добавить формулу к закладке" />
+                        <Button layoutX="285.0" layoutY="424.0" mnemonicParsing="false" onAction="#clearFormulasButtonPressed" text="Очистить заданные формулы" />
+                        <CheckBox fx:id="oldStyleCheckBox" layoutX="285.0" layoutY="371.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="151.0" text="Не менять стилизацию" />
+                        <TextArea fx:id="logTextArea" editable="false" layoutX="652.0" layoutY="161.0" prefHeight="200.0" prefWidth="316.0" />
+                        <Label layoutX="652.0" layoutY="136.0" text="Отчет о работе:" />
+                        <TextField fx:id="searchTextField" layoutX="78.0" layoutY="121.0" />
+                        <Label layoutX="242.0" layoutY="125.0" prefHeight="17.0" prefWidth="347.0" text="Введите часть имени закладки или выберите из всего списка" />
+                        <ListView fx:id="bookmarksListView" layoutX="78.0" layoutY="157.0" prefHeight="200.0" prefWidth="200.0" />
                      </children></AnchorPane>
             </content>
           </Tab>

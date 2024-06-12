@@ -28,8 +28,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         //отключаем возможность изменять размер окна
         primaryStage.setResizable(false);
-        primaryStage.setWidth(1000.0);
-        primaryStage.setHeight(600.0);
+        primaryStage.setWidth(1100.0);
+        primaryStage.setHeight(650.0);
         //устанавливаем название
         primaryStage.setTitle("Formula calculator");
         //задаем Stage, в который будут устанавливаться нужные сцены
