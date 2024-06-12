@@ -168,10 +168,10 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     public void chooseDocButtonPressed(){
-        FileChooser fil_chooser = new FileChooser();
-        File file = fil_chooser.showOpenDialog(SceneManager.getPrimaryStage());
-        String path = file.getAbsolutePath();
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(SceneManager.getPrimaryStage());
         if (file != null) {
+            String path = file.getAbsolutePath();
             //проверяем формат файла
             if(!path.endsWith(".docx")){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "Формат документа должен быть .docx", ButtonType.OK);

@@ -28,10 +28,6 @@ public class Formula {
     //сохранять ли старую стилизацию - по умолчанию нет
     protected Boolean saveOldStyle = false;
 
-    //форматирование - по умолчанию нет
-    //TODO: убрать?
-    protected Boolean isHeader = false;//является ли текст заголовком
-
     //стилизация - по умолчанию нет
     protected Boolean isCursive = false;//курсив
     protected Boolean isBald = false;//выделен жирным
@@ -72,13 +68,6 @@ public class Formula {
             throw new IllegalArgumentException("Incorrect database params");
     }
 
-    public void setFormatting(Boolean isHeader){
-        if(isHeader != null) {
-            this.isHeader = isHeader;
-        } else
-            throw new IllegalArgumentException("At least one of arguments is null");
-    }
-
     public void setStyle(Boolean isCursive, Boolean isBald, Boolean isUnderlined, String highlighting, String color){
         if(isCursive != null && isUnderlined != null && isBald != null && highlighting != null && color != null) {
             this.isCursive = isCursive;//курсив
@@ -109,8 +98,7 @@ public class Formula {
             return true;
         }else{
             //проверяем все обязательные поля
-            //TODO: добавить остальные поля
-            if(font.isBlank() || fontSize == null || highlighting == null || color == null)
+            if(font == null || fontSize == null || highlighting == null || color == null)
                 return false;
             else
                 return true;
@@ -122,7 +110,6 @@ public class Formula {
      * @param formula вторая формула
      * @return true - имеет одинаковые параметры, false - нет
      */
-    //TODO: добавить остальные поля
     public Boolean hasEqualDatabaseConnection(Formula formula){
         return this.url.equals(formula.url) && this.username.equals(formula.username) && this.password.equals(formula.password);
     }

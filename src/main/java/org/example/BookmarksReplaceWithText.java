@@ -79,7 +79,6 @@ public class BookmarksReplaceWithText {
                 if (listEntry instanceof R && ((R) listEntry).getRPr() != null &&
                         ((R) listEntry).getRPr().getVanish() != null && ((R) listEntry).getRPr().getVanish().isVal()) {
 
-                    //TODO: Проверить остальные варианты
                     Object content = ((R) listEntry).getContent().get(0);
                     if(content instanceof Text)
                         formula = ((Text)(content)).getValue();
@@ -137,7 +136,6 @@ public class BookmarksReplaceWithText {
                 FormulaParser parser = new FormulaParser();
                 parser.parse(formula);
                 String value = access.getData(parser);
-                //TODO: проверить пустые и некорректные значения
                 theList.add(insertIndex, createSubstitutionRun(parser,value));
 
             }
