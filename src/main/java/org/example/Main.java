@@ -31,7 +31,7 @@ public class Main extends Application {
         primaryStage.setWidth(1100.0);
         primaryStage.setHeight(650.0);
         //устанавливаем название
-        primaryStage.setTitle("Formula calculator");
+        primaryStage.setTitle("Калькулятор формул");
         //задаем Stage, в который будут устанавливаться нужные сцены
         SceneManager.setPrimaryStage(primaryStage);
         //включаем первую сцену
@@ -52,7 +52,7 @@ public class Main extends Application {
         });
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         Application.launch(args);
     }
 }

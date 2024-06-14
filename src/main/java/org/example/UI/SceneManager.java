@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -62,15 +64,15 @@ public class SceneManager {
         primaryStage.close();
     }
 
-    public static void addSceneOnNewAdditionalStage(String name, Double width, Double height){
-        if(!additionalStages.containsKey(name)) {
+    public static void addSceneOnNewAdditionalStage(String fileName,String sceneName, Double width, Double height){
+        if(!additionalStages.containsKey(fileName)) {
             Stage newStage = new Stage();
             newStage.setResizable(false);
-            newStage.setTitle(name);
-            additionalStages.put(name,newStage);
+            newStage.setTitle(sceneName);
+            additionalStages.put(fileName,newStage);
         }
-        setSceneOnStage(name,additionalStages.get(name),width,height);
-        additionalStages.get(name).show();
+        setSceneOnStage(fileName,additionalStages.get(fileName),width,height);
+        additionalStages.get(fileName).show();
     }
 
     public static void closeAdditionalStage(String name){
@@ -85,6 +87,13 @@ public class SceneManager {
         for(Stage stage : additionalStages.values()) {
             stage.close();
         }
+    }
+
+    public static void createNewAlert(Alert.AlertType type, String title, String headerText, String contentText, ButtonType... buttons){
+        Alert alert = new Alert(type, contentText, buttons);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.showAndWait();
     }
 
 }

@@ -40,10 +40,14 @@ public class Configuration {
     private void load() throws Exception{
         HashMap Temp;
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configFile));
-            Temp = (HashMap) ois.readObject();
-            if (Temp != null && !Temp.isEmpty())
-                configs.putAll(Temp);
+            if(!configFile.exists()){
+                configFile.createNewFile();
+            }else {
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configFile));
+                Temp = (HashMap) ois.readObject();
+                if (Temp != null && !Temp.isEmpty())
+                    configs.putAll(Temp);
+            }
         }catch (EOFException ex) {
             log.info("Файл конфигурации пустой");
         }

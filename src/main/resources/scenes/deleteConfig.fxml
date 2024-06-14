@@ -10,9 +10,9 @@
       <TextField fx:id="urlTextField" editable="false" layoutX="14.0" layoutY="150.0" />
       <TextField fx:id="usernameTextField" editable="false" layoutX="176.0" layoutY="150.0" />
       <TextField fx:id="passwordTextField" editable="false" layoutX="337.0" layoutY="150.0" />
-      <Label layoutX="14.0" layoutY="119.0" text="url" />
-      <Label layoutX="176.0" layoutY="119.0" text="username" />
-      <Label layoutX="337.0" layoutY="119.0" text="password" />
+      <Label layoutX="14.0" layoutY="119.0" text="URL" />
+      <Label layoutX="176.0" layoutY="119.0" text="Имя пользователя" />
+      <Label layoutX="337.0" layoutY="119.0" text="Пароль" />
       <Label layoutX="148.0" layoutY="20.0" text="Выберите удаляемую конфигурацию" />
    </children>
 </AnchorPane>

@@ -2,6 +2,7 @@ package org.example.formula;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.logging.Logger;
 
 public class FormulaCalculator extends Formula {
@@ -22,11 +23,15 @@ public class FormulaCalculator extends Formula {
                 try {
                     sb.append(fields[i].getName());
                     sb.append(TITLE_SPLIT);
-                    sb.append(fields[i].get(this));
-
-                    //если нужно оставить старую стилизацию
-                    if (fields[i].getName().equals("saveOldStyle") && fields[i].get(this).equals(true))
-                        break;
+                    //логин и пароль кодируются, чтобы не хранить их в открытом виде
+                    if(fields[i].getName().equals("username") || fields[i].getName().equals("password")){
+                        sb.append(Base64.getEncoder().encodeToString(((String)fields[i].get(this)).getBytes()));
+                    }else {
+                        sb.append(fields[i].get(this));
+                        //если нужно оставить старую стилизацию
+                        if (fields[i].getName().equals("saveOldStyle") && fields[i].get(this).equals(true))
+                            break;
+                    }
                 }catch (IllegalAccessException ex){
                     log.info(Arrays.toString(ex.getStackTrace()));
                 }

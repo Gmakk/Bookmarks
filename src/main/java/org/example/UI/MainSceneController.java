@@ -33,6 +33,8 @@ import org.example.formula.FormulaCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.example.UI.SceneManager.createNewAlert;
+
 //TODO: добавить очистку документа от формул
 public class MainSceneController implements Initializable {
     @Getter
@@ -169,13 +171,14 @@ public class MainSceneController implements Initializable {
     @FXML
     public void chooseDocButtonPressed(){
         FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Microsoft Word files (*.docx)", "*.docx");
+        fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(SceneManager.getPrimaryStage());
         if (file != null) {
             String path = file.getAbsolutePath();
             //проверяем формат файла
             if(!path.endsWith(".docx")){
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Формат документа должен быть .docx", ButtonType.OK);
-                alert.showAndWait();
+                createNewAlert(Alert.AlertType.INFORMATION,"","","Формат документа должен быть .docx", ButtonType.OK);
                 return;
             }
             fileNameLabel.setText(file.getAbsolutePath());
@@ -195,16 +198,14 @@ public class MainSceneController implements Initializable {
                 //открываем документ
                 wordMLPackage = WordprocessingMLPackage.load(new File(fileNameLabel.getText()));
             }catch (Docx4JException ex){
-                log.info(Arrays.toString(ex.getStackTrace()));
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании документа", ButtonType.OK);
-                alert.showAndWait();
+                log.error(Arrays.toString(ex.getStackTrace()));
+                createNewAlert(Alert.AlertType.ERROR,"","","Произошла ошибка при считывании документа", ButtonType.OK);
                 return;
             }
             //загружаем закладки документа
             List<String> bookmarkNames = Files.getBookmarkNames(wordMLPackage);
             if (bookmarkNames.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "В документе нет закладок", ButtonType.OK);
-                alert.showAndWait();
+                createNewAlert(Alert.AlertType.INFORMATION,"","","В документе нет закладок", ButtonType.OK);
                 return;
             }
 
@@ -221,8 +222,7 @@ public class MainSceneController implements Initializable {
             //очищает ранее заданные формулы для закладок
             alterMap.clear();
         }else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Для продолжения работы, необходимо выбрать файл", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.INFORMATION,"","","Для продолжения работы, необходимо выбрать файл", ButtonType.OK);
         }
     }
 
@@ -232,8 +232,7 @@ public class MainSceneController implements Initializable {
     @FXML
     public void fillDocumentWithFormulasButtonPressed(){
         if(wordMLPackage == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.INFORMATION,"","","Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
             return;
         }
         //добавление формул в невидимый элемент
@@ -243,11 +242,10 @@ public class MainSceneController implements Initializable {
         //сохранение документа
         try {
             wordMLPackage.save(new File(fileNameLabel.getText()));
-            logTextArea.appendText("Document has been saved with new formulas\n");
+            logTextArea.appendText("Документ сохранен с новыми формулами\n");
         }catch(Docx4JException ex){
-            log.info(Arrays.toString(ex.getStackTrace()));
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при сохранении документа, возможно он уже где-то открыт", ButtonType.OK);
-            alert.showAndWait();
+            log.error(Arrays.toString(ex.getStackTrace()));
+            createNewAlert(Alert.AlertType.ERROR,"","","Произошла ошибка при сохранении документа, возможно он уже где-то открыт", ButtonType.OK);
         }
 
     }
@@ -258,8 +256,7 @@ public class MainSceneController implements Initializable {
     @FXML
     public void addFormulaButtonPressed(){
         if(bookmarksListView.getSelectionModel().getSelectedItems().size() != 1){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала выбрать закладку, загрузите для этого документ", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.INFORMATION,"","","Необходимо сначала выбрать закладку, загрузите для этого документ", ButtonType.OK);
             return;
         }
 
@@ -277,13 +274,11 @@ public class MainSceneController implements Initializable {
                     tableField.getText(), columnField.getText(), primaryKeyField.getText(), primaryKeyValueField.getText());
         }catch (IllegalArgumentException ex){
             log.info(Arrays.toString(ex.getStackTrace()));
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Поля базы данных не должны быть пустыми", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.INFORMATION,"","","Поля базы данных не должны быть пустыми", ButtonType.OK);
             return;
         }catch (Exception ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
-            alert.showAndWait();
-            log.info(Arrays.toString(ex.getStackTrace()));
+            createNewAlert(Alert.AlertType.ERROR,"","","Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
         //шрифт
         calculator.setFont(fontComboBox.getValue(),fontSizeSpinner.getValue());
@@ -299,7 +294,7 @@ public class MainSceneController implements Initializable {
 
         //добавление формулы в map, для последующего отображения в файле
         alterMap.put(bookmarkName, calculator.calculate());
-        logTextArea.appendText("Added formula " + calculator.calculate() + " for bookmark " + bookmarksListView.getSelectionModel().getSelectedItems().get(0) + "\n");
+        logTextArea.appendText("К закладке " + bookmarksListView.getSelectionModel().getSelectedItems().get(0) + " добавлена формула " + calculator.calculate() + "\n");
     }
 
     /**
@@ -308,7 +303,7 @@ public class MainSceneController implements Initializable {
     @FXML
     public void clearFormulasButtonPressed(){
         alterMap.clear();
-        logTextArea.appendText("List of formulas has been cleared\n");
+        logTextArea.appendText("Список закладок был очищен\n");
     }
 
     /**
@@ -328,19 +323,16 @@ public class MainSceneController implements Initializable {
             BookmarksReplaceWithText.replaceBookmarkContents(body.getContent());
             //сохранение документа
             wordMLPackage.save(new File(fileNameLabel.getText()));
-            logTextArea.appendText("Document has been saved with new content\n");
+            logTextArea.appendText("Документ был сохранен с новым содержимым\n");
         }catch (SQLException sqlException){
-            log.info(Arrays.toString(sqlException.getStackTrace()));
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при считывании данных из бд", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.ERROR,"","","Произошла ошибка при считывании данных из бд", ButtonType.OK);
+            log.error(Arrays.toString(sqlException.getStackTrace()));
         }catch (Docx4JException ex){
-            log.info(Arrays.toString(ex.getStackTrace()));
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Произошла ошибка при сохранении документа, возможно он уже где-то открыт", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.ERROR,"","","Произошла ошибка при сохранении документа, возможно он уже где-то открыт", ButtonType.OK);
+            log.error(Arrays.toString(ex.getStackTrace()));
         }catch (Exception ex){
-            log.info(Arrays.toString(ex.getStackTrace()));
-            Alert alert = new Alert(Alert.AlertType.ERROR, "В документе содержится закладка с некорректной формулой", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.ERROR,"","","В документе содержится закладка с некорректной формулой", ButtonType.OK);
+            log.error(Arrays.toString(ex.getStackTrace()));
         }
 
     }
@@ -360,12 +352,12 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void addConfigButtonPressed(){
-        SceneManager.addSceneOnNewAdditionalStage("addConfig",500.0,300.0);
+        SceneManager.addSceneOnNewAdditionalStage("addConfig","Добавление конфигурации",500.0,300.0);
     }
 
     @FXML
     private void deleteConfigButtonPressed(){
-        SceneManager.addSceneOnNewAdditionalStage("deleteConfig",500.0,300.0);
+        SceneManager.addSceneOnNewAdditionalStage("deleteConfig","Удаление конфигурации",500.0,300.0);
     }
 
     @FXML
@@ -379,9 +371,8 @@ public class MainSceneController implements Initializable {
                 passwordTextField.setText(properties.getPassword());
             }
         } catch (Exception ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
-            alert.showAndWait();
-            log.info("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
+            createNewAlert(Alert.AlertType.ERROR,"","","Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            log.error("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
         }
     }
 
@@ -391,9 +382,8 @@ public class MainSceneController implements Initializable {
             configsComboBox.getItems().clear();
             configsComboBox.getItems().addAll(configuration.getConfigNames());
         } catch (Exception ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
-            alert.showAndWait();
-            log.info("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
+            createNewAlert(Alert.AlertType.ERROR,"","","Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            log.error("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
         }
     }
 }

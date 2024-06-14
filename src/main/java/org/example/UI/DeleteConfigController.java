@@ -13,10 +13,13 @@ import org.example.database.config.Properties;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.example.UI.SceneManager.createNewAlert;
 
 public class DeleteConfigController implements Initializable {
-    private static Logger log = Logger.getLogger(DeleteConfigController.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(DeleteConfigController.class);
     private static Configuration configuration;
 
     @FXML
@@ -35,9 +38,8 @@ public class DeleteConfigController implements Initializable {
             configsComboBox.getItems().addAll(configuration.getConfigNames());
             //configsComboBox.getSelectionModel().select(0);
         } catch (Exception ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
-            alert.showAndWait();
-            log.info("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
+            createNewAlert(Alert.AlertType.ERROR,"","","Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            log.error("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
         }
     }
 
@@ -62,14 +64,11 @@ public class DeleteConfigController implements Initializable {
                 passwordTextField.setText("");
                 usernameTextField.setText("");
                 urlTextField.setText("");
-                //configsComboBox.getSelectionModel().select(0);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Информация о подключении к бд удалена", ButtonType.OK);
-                alert.showAndWait();
+                createNewAlert(Alert.AlertType.INFORMATION,"","","Информация о подключении к бд удалена", ButtonType.OK);
             }
         } catch (Exception ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Ошибка при работе с файлом конфигурации", ButtonType.OK);
-            alert.showAndWait();
-            log.info("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
+            createNewAlert(Alert.AlertType.ERROR,"","","Ошибка при работе с файлом конфигурации", ButtonType.OK);
+            log.error("Ошибка при работе с файлом конфигурации\n" + Arrays.toString(ex.getStackTrace()));
         }
     }
 }

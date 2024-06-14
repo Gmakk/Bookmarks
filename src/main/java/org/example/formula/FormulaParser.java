@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,11 @@ public class FormulaParser extends Formula{
 
         for (String param : params) {
             paramName = titlePattern.split(param)[0];
-            paramValue = titlePattern.split(param)[1];
+            //логин и пароль кодируются, чтобы не хранить их в открытом виде
+            if(paramName.equals("username") || paramName.equals("password"))
+                paramValue = new String(Base64.getDecoder().decode(titlePattern.split(param)[1]));
+            else
+                paramValue = titlePattern.split(param)[1];
 
             try {
                 currentField = Formula.class.getDeclaredField(paramName);
