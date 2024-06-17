@@ -123,7 +123,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Справка">
             <items>
-              <MenuItem mnemonicParsing="false" text="Открыть справку" />
+              <MenuItem mnemonicParsing="false" onAction="#showHelpButtonPressed" text="Открыть справку" />
             </items>
           </Menu>
         </menus>

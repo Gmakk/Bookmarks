@@ -39,7 +39,11 @@ public class AddConfigController {
             //проверяется возможность подключения с такими параметрами
             Properties properties = configuration.getConfig(titleTextField.getText());
             //если подключиться не удастся, то выкинется SQLException
-            Connection connection = DriverManager.getConnection(properties.getUrl(), properties.getUsername(), properties.getPassword());
+            Connection connection;
+            if(properties.getUsername().isEmpty() || properties.getPassword().isEmpty())
+                connection = DriverManager.getConnection(properties.getUrl());
+            else
+                connection = DriverManager.getConnection(properties.getUrl(), properties.getUsername(), properties.getPassword());
             connection.close();
         } catch (SQLException ex) {
             createNewAlert(Alert.AlertType.INFORMATION,"","","Ошибка при попытке подключения к бд с указанными параметрами", ButtonType.OK);

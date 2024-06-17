@@ -33,8 +33,14 @@ public class FormulaParser extends Formula{
         for (String param : params) {
             paramName = titlePattern.split(param)[0];
             //логин и пароль кодируются, чтобы не хранить их в открытом виде
-            if(paramName.equals("username") || paramName.equals("password"))
-                paramValue = new String(Base64.getDecoder().decode(titlePattern.split(param)[1]));
+            if(paramName.equals("username") || paramName.equals("password")) {
+                //если логин или пароль пустые
+                if((paramName+Formula.TITLE_SPLIT).equals(param))
+                    paramValue = "";
+                //логин или пароль не пустые
+                else
+                    paramValue = new String(Base64.getDecoder().decode(titlePattern.split(param)[1]));
+            }
             else
                 paramValue = titlePattern.split(param)[1];
 

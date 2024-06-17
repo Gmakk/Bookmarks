@@ -8,6 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -96,4 +100,21 @@ public class SceneManager {
         alert.showAndWait();
     }
 
+    public static void showHelp() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        URL xmlUrl = SceneManager.class.getResource("/scenes/help.fxml");
+        loader.setLocation(xmlUrl);
+        Parent root = loader.load();
+
+
+        WebView browser = new WebView();
+        Scene helpScene = new Scene(root);
+        ((Pane) helpScene.getRoot()).getChildren().add(browser);
+        Stage helpStage = new Stage();
+        helpStage.setTitle("Справка");
+        helpStage.setScene(helpScene);
+        URL url = SceneManager.class.getResource("/help.html");
+        browser.getEngine().load(url.toExternalForm());
+        helpStage.show();
+    }
 }

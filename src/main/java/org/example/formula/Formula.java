@@ -55,7 +55,7 @@ public class Formula {
     public void setDatabaseParams(String url, String username, String password,
                                   String table, String column, String primaryKey, String primaryKeyValue){
         if (!table.isBlank() && !column.isBlank() && !primaryKey.isBlank()
-                && !url.isBlank() && !username.isBlank() && !password.isBlank()) {
+                && !url.isBlank()) {
 
             this.table = table;
             this.column = column;
@@ -89,9 +89,9 @@ public class Formula {
      * @return true - заданы, false - нет
      */
     public Boolean checkMandatoryParams(){
-        //база данных в любом случае должна быть задана
+        //база данных в любом случае должна быть задана(имя и пароль могут быть пустыми)
         if(table.isBlank() || column.isBlank() || primaryKey.isBlank()
-                || url.isBlank() || username.isBlank() || password.isBlank() || primaryKeyValue.isBlank())
+                || url.isBlank() || primaryKeyValue.isBlank())
             return false;
         //если сохраняется старая стилизация, то необходимо проверить только задание базы данных
         if(saveOldStyle){

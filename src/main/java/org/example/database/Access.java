@@ -25,7 +25,10 @@ public class Access {
                 return connections.get(existFormulaConnection);
         }
         //если нужного Connection нет, то создаем новый
-        connection = DriverManager.getConnection(formula.getUrl(), formula.getUsername(), formula.getPassword());
+        if(formula.getUsername().isEmpty() || formula.getPassword().isEmpty()){
+            connection = DriverManager.getConnection(formula.getUrl());
+        }else
+            connection = DriverManager.getConnection(formula.getUrl(), formula.getUsername(), formula.getPassword());
         connections.put(formula,connection);
         return connection;
     }

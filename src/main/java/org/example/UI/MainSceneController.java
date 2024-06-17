@@ -13,8 +13,9 @@ import javafx.stage.FileChooser;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import org.example.database.config.Properties;
 import org.example.formula.FormulaCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import static org.example.UI.SceneManager.createNewAlert;
 
@@ -358,6 +360,13 @@ public class MainSceneController implements Initializable {
     @FXML
     private void deleteConfigButtonPressed(){
         SceneManager.addSceneOnNewAdditionalStage("deleteConfig","Удаление конфигурации",500.0,300.0);
+    }
+
+    @FXML
+    private void showHelpButtonPressed() throws IOException {
+        String sep = System.getProperty("file.separator");
+        //SceneManager.showHelp(html);
+        SceneManager.showHelp();
     }
 
     @FXML
