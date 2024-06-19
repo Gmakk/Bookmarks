@@ -3,6 +3,7 @@ package org.example;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.docx4j.model.fields.merge.DataFieldName;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +34,10 @@ public class Main extends Application {
         primaryStage.setHeight(650.0);
         //устанавливаем название
         primaryStage.setTitle("Калькулятор формул");
+        //устанавливаем логотип
+        InputStream iconStream = getClass().getResourceAsStream("/logo32.png");
+        Image image = new Image(iconStream);
+        primaryStage.getIcons().add(image);
         //задаем Stage, в который будут устанавливаться нужные сцены
         SceneManager.setPrimaryStage(primaryStage);
         //включаем первую сцену

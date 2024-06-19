@@ -5,110 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.UI.MainSceneController">
    <children>
-      <TabPane id="tabPane" layoutX="37.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
-        <tabs>
-          <Tab text="Настройка закладки">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="732.0">
-                     <children>
-                        <Button layoutX="301.0" layoutY="484.0" mnemonicParsing="false" onAction="#fillInDocumentWithDataButtonPressed" text="Подставить значения в документ" />
-                        <Label layoutX="293.0" layoutY="240.0" text="Выберите закладку из списка" />
-                        <Label fx:id="fileNameLabel" layoutX="222.0" layoutY="20.0" prefHeight="18.0" prefWidth="491.0" visible="false" />
-                        <Button fx:id="chooseDocButton" layoutX="76.0" layoutY="17.0" mnemonicParsing="false" onAction="#chooseDocButtonPressed" text="Выбрать документ" />
-                        <Button layoutX="76.0" layoutY="67.0" mnemonicParsing="false" onAction="#showDocBookmarksButtonPressed" text="Загрузить закладки документа" />
-                        <Button layoutX="76.0" layoutY="484.0" mnemonicParsing="false" onAction="#fillDocumentWithFormulasButtonPressed" text="Заполнить документ формулами" />
-                        <Label layoutX="41.0" layoutY="14.0" text="1">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="41.0" layoutY="65.0" text="2">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="41.0" layoutY="118.0" text="3">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="41.0" layoutY="365.0" text="4">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="41.0" layoutY="481.0" text="6" textFill="RED">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Label layoutX="76.0" layoutY="360.0" prefHeight="39.0" prefWidth="180.0" text="Заполните данные во вкладках или оставьте старые" wrapText="true" />
-                        <Label layoutX="41.0" layoutY="422.0" text="5">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                        </Label>
-                        <Button layoutX="76.0" layoutY="425.0" mnemonicParsing="false" onAction="#addFormulaButtonPressed" text="Добавить формулу к закладке" />
-                        <Button layoutX="285.0" layoutY="424.0" mnemonicParsing="false" onAction="#clearFormulasButtonPressed" text="Очистить заданные формулы" />
-                        <CheckBox fx:id="oldStyleCheckBox" layoutX="285.0" layoutY="371.0" mnemonicParsing="false" prefHeight="14.0" prefWidth="151.0" text="Не менять стилизацию" />
-                        <TextArea fx:id="logTextArea" editable="false" layoutX="652.0" layoutY="161.0" prefHeight="200.0" prefWidth="316.0" />
-                        <Label layoutX="652.0" layoutY="136.0" text="Отчет о работе:" />
-                        <TextField fx:id="searchTextField" layoutX="78.0" layoutY="121.0" />
-                        <Label layoutX="242.0" layoutY="125.0" prefHeight="17.0" prefWidth="347.0" text="Введите часть имени закладки или выберите из всего списка" />
-                        <ListView fx:id="bookmarksListView" layoutX="78.0" layoutY="157.0" prefHeight="200.0" prefWidth="200.0" />
-                     </children></AnchorPane>
-            </content>
-          </Tab>
-          <Tab text="База данных">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <TextField fx:id="tableField" layoutX="338.0" layoutY="50.0" text="data_table" />
-                        <TextField fx:id="columnField" layoutX="338.0" layoutY="124.0" text="column_text" />
-                        <Label layoutX="338.0" layoutY="22.0" text="Таблица" />
-                        <Label layoutX="338.0" layoutY="91.0" text="Поле" />
-                        <Label layoutX="336.0" layoutY="156.0" text="Первичный ключ" />
-                        <TextField fx:id="primaryKeyField" layoutX="338.0" layoutY="184.0" text="id" />
-                        <Label layoutX="113.0" layoutY="91.0" text="URL" />
-                        <Label layoutX="113.0" layoutY="156.0" text="Имя пользователя" />
-                        <Label layoutX="113.0" layoutY="218.0" text="Пароль" />
-                        <TextField fx:id="urlTextField" editable="false" layoutX="113.0" layoutY="124.0" />
-                        <TextField fx:id="usernameTextField" editable="false" layoutX="113.0" layoutY="184.0" />
-                        <TextField fx:id="passwordTextField" editable="false" layoutX="113.0" layoutY="242.0" />
-                        <Label layoutX="338.0" layoutY="218.0" text="Значение первичного ключа" />
-                        <TextField fx:id="primaryKeyValueField" layoutX="338.0" layoutY="242.0" text="1" />
-                         <ComboBox fx:id="configsComboBox" layoutX="112.0" layoutY="52.0" onAction="#configurationSelected" prefWidth="150.0" />
-                        <Label layoutX="112.0" layoutY="22.0" prefHeight="12.0" prefWidth="80.0" text="Конфигурация" />
-                     </children></AnchorPane>
-            </content>
-          </Tab>
-            <Tab text="Стилизация">
-                <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <CheckBox fx:id="cursiveCheckBox" layoutX="75.0" layoutY="30.0" mnemonicParsing="false" text="Курсив" />
-                        <CheckBox fx:id="baldCheckBox" layoutX="75.0" layoutY="92.0" mnemonicParsing="false" text="Жирный" />
-                        <CheckBox fx:id="highlightCheckBox" layoutX="75.0" layoutY="211.0" mnemonicParsing="false" onAction="#highlightCheckBoxPressed" text="Выделение цветом" />
-                        <ComboBox fx:id="highlightComboBox" layoutX="240.0" layoutY="211.0" prefWidth="150.0" visible="false" />
-                        <ComboBox fx:id="colorComboBox" layoutX="75.0" layoutY="290.0" prefWidth="150.0" />
-                        <Label layoutX="75.0" layoutY="263.0" text="Цвет текста" />
-                        <CheckBox fx:id="underlinedCheckBox" layoutX="75.0" layoutY="153.0" mnemonicParsing="false" text="Подчеркивание" />
-
-                         <ComboBox fx:id="fontComboBox" layoutX="489.0" layoutY="57.0" prefWidth="150.0" />
-                         <Label layoutX="490.0" layoutY="135.0" text="Размер шрифта" />
-                         <Spinner fx:id="fontSizeSpinner" editable="true" layoutX="490.0" layoutY="165.0" />
-                         <Label layoutX="489.0" layoutY="29.0" text="Шрифт" />
-                     </children></AnchorPane>
-                </content>
-            </Tab>
-        </tabs>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </TabPane>
-      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar prefHeight="15.0" prefWidth="1000.0" styleClass="tab" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="Общее">
             <items>
@@ -131,5 +30,131 @@
             <Insets />
          </opaqueInsets>
       </MenuBar>
+      <TabPane id="tabPane" layoutX="37.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+        <tabs>
+          <Tab text="Настройка закладки">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="533.0" prefWidth="1106.0">
+                     <children>
+                        <Button layoutX="331.0" layoutY="484.0" mnemonicParsing="false" onAction="#fillInDocumentWithDataButtonPressed" text="Подставить значения в документ" />
+                        <Label layoutX="285.0" layoutY="239.0" text="Выберите закладку из списка" />
+                        <Label fx:id="fileNameLabel" layoutX="244.0" layoutY="26.0" prefHeight="21.0" prefWidth="825.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font></Label>
+                        <Button fx:id="chooseDocButton" layoutX="75.0" layoutY="18.0" mnemonicParsing="false" onAction="#chooseDocButtonPressed" text="Выбрать документ" />
+                        <Button layoutX="75.0" layoutY="67.0" mnemonicParsing="false" onAction="#showDocBookmarksButtonPressed" text="Загрузить закладки документа" />
+                        <Button layoutX="75.0" layoutY="484.0" mnemonicParsing="false" onAction="#fillDocumentWithFormulasButtonPressed" text="Заполнить документ формулами" />
+                        <Label layoutX="40.0" layoutY="14.0" text="1">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="65.0" text="2">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="118.0" text="3">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="375.0" text="4">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="40.0" layoutY="487.0" text="6" textFill="RED">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="75.0" layoutY="370.0" prefHeight="39.0" prefWidth="195.0" text="Заполните данные во вкладках или оставьте старые" wrapText="true" />
+                        <Label layoutX="40.0" layoutY="428.0" text="5">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="75.0" layoutY="425.0" mnemonicParsing="false" onAction="#addFormulaButtonPressed" text="Добавить формулу к закладке" />
+                        <Button layoutX="314.0" layoutY="425.0" mnemonicParsing="false" onAction="#clearFormulasButtonPressed" text="Очистить заданные формулы" />
+                        <CheckBox fx:id="oldStyleCheckBox" layoutX="293.0" layoutY="380.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="179.0" text="Не менять стилизацию" />
+                        <TextArea fx:id="logTextArea" editable="false" layoutX="721.0" layoutY="157.0" prefHeight="200.0" prefWidth="340.0" />
+                        <Label layoutX="843.0" layoutY="124.0" text="Отчет о работе:" />
+                        <TextField fx:id="searchTextField" layoutX="75.0" layoutY="119.0" prefHeight="32.0" prefWidth="200.0" />
+                        <Label layoutX="285.0" layoutY="124.0" prefHeight="22.0" prefWidth="398.0" text="Введите часть имени закладки или выберите из всего списка" />
+                        <ListView fx:id="bookmarksListView" layoutX="75.0" layoutY="157.0" prefHeight="200.0" prefWidth="200.0" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="База данных">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="tableField" layoutX="681.0" layoutY="153.0" prefWidth="200.0" text="data_table" />
+                        <TextField fx:id="columnField" layoutX="681.0" layoutY="238.0" prefWidth="200.0" text="column_text" />
+                        <Label layoutX="681.0" layoutY="123.0" text="Таблица" />
+                        <Label layoutX="681.0" layoutY="201.0" text="Поле" />
+                        <Label layoutX="681.0" layoutY="294.0" text="Первичный ключ" />
+                        <TextField fx:id="primaryKeyField" layoutX="681.0" layoutY="332.0" prefWidth="200.0" text="id" />
+                        <Label layoutX="132.0" layoutY="193.0" text="URL" />
+                        <Label layoutX="132.0" layoutY="283.0" text="Имя пользователя" />
+                        <Label layoutX="132.0" layoutY="372.0" text="Пароль" />
+                        <TextField fx:id="urlTextField" editable="false" layoutX="132.0" layoutY="230.0" prefWidth="200.0" />
+                        <TextField fx:id="usernameTextField" editable="false" layoutX="132.0" layoutY="324.0" prefWidth="200.0" />
+                        <TextField fx:id="passwordTextField" editable="false" layoutX="132.0" layoutY="404.0" prefWidth="200.0" />
+                        <Label layoutX="681.0" layoutY="380.0" text="Значение первичного ключа" />
+                        <TextField fx:id="primaryKeyValueField" layoutX="681.0" layoutY="412.0" prefWidth="200.0" text="1" />
+                         <ComboBox fx:id="configsComboBox" layoutX="132.0" layoutY="147.0" onAction="#configurationSelected" prefWidth="200.0" />
+                        <Label layoutX="132.0" layoutY="115.0" prefHeight="18.0" prefWidth="117.0" text="Конфигурация" />
+                        <Separator layoutX="550.0" layoutY="34.0" orientation="VERTICAL" prefHeight="450.0" />
+                        <Label layoutX="132.0" layoutY="65.0" text="Настройте подключение к БД:">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="681.0" layoutY="65.0" text="Настрйоте источник подстановки">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Стилизация">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="cursiveCheckBox" layoutX="111.0" layoutY="131.0" mnemonicParsing="false" text="Курсив" />
+                        <CheckBox fx:id="baldCheckBox" layoutX="111.0" layoutY="193.0" mnemonicParsing="false" text="Жирный" />
+                        <CheckBox fx:id="highlightCheckBox" layoutX="111.0" layoutY="312.0" mnemonicParsing="false" onAction="#highlightCheckBoxPressed" text="Выделение цветом" />
+                        <ComboBox fx:id="highlightComboBox" layoutX="274.0" layoutY="311.0" prefWidth="200.0" visible="false" />
+                        <ComboBox fx:id="colorComboBox" layoutX="111.0" layoutY="391.0" prefWidth="200.0" />
+                        <Label layoutX="111.0" layoutY="364.0" text="Цвет текста" />
+                        <CheckBox fx:id="underlinedCheckBox" layoutX="111.0" layoutY="254.0" mnemonicParsing="false" text="Подчеркивание" />
+
+                         <ComboBox fx:id="fontComboBox" layoutX="699.0" layoutY="169.0" prefHeight="28.0" prefWidth="200.0" />
+                         <Label layoutX="700.0" layoutY="247.0" text="Размер шрифта" />
+                         <Spinner fx:id="fontSizeSpinner" editable="true" layoutX="700.0" layoutY="277.0" prefHeight="32.0" prefWidth="200.0" />
+                         <Label layoutX="699.0" layoutY="141.0" text="Шрифт" />
+                        <Label layoutX="111.0" layoutY="65.0" prefHeight="30.0" prefWidth="349.0" text="Выберите нужные выделения текста:">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="699.0" layoutY="65.0" prefHeight="30.0" prefWidth="167.0" text="Настройте шрифт:">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Separator layoutX="550.0" layoutY="34.0" orientation="VERTICAL" prefHeight="450.0" />
+                     </children></AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </TabPane>
    </children>
 </AnchorPane>

@@ -121,48 +121,48 @@ public class MainSceneController implements Initializable {
         fontSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100,14));
 
         //заполняется combo box с доступными цветами шрифта и выделения и по умолчанию выбирается черный и желтый
-        textColors.put("Black",	"#000000");
-        textColors.put("Gray","#808080");
-        textColors.put("Silver","#C0C0C0");
-        textColors.put("White","#FFFFFF");
-        textColors.put("Fuchsia","#FF00FF");
-        textColors.put("Purple","#800080");
-        textColors.put("Red","#FF0000");
-        textColors.put("Maroon","#800000");
-        textColors.put("Yellow","#FFFF00");
-        textColors.put("Olive","#808000");
-        textColors.put("Lime","#00FF00");
-        textColors.put("Green","#008000");
-        textColors.put("Aqua","#00FFFF");
-        textColors.put("Teal","#008080");
-        textColors.put("Blue","#0000FF");
-        textColors.put("Navy","#000080");
+        textColors.put("Черный", "#000000");
+        textColors.put("Серый","#808080");
+        textColors.put("Cеребряный","#C0C0C0");
+        textColors.put("Белый","#FFFFFF");
+        textColors.put("Фуксия","#FF00FF");
+        textColors.put("Фиолетовый","#800080");
+        textColors.put("Красный","#FF0000");
+        textColors.put("Темно-бордовый","#800000");
+        textColors.put("Желтый","#FFFF00");
+        textColors.put("Оливковый","#808000");
+        textColors.put("Лайм","#00FF00");
+        textColors.put("Зеленый","#008000");
+        textColors.put("Аква","#00FFFF");
+        textColors.put("Бирюзовый","#008080");
+        textColors.put("Синий","#0000FF");
+        textColors.put("Темно-синий","#000080");
 
 
-        highlightColors.put("Black", "#000000");
-        highlightColors.put("Blue", "#0000FF");
-        highlightColors.put("Cyan", "#00FFFF");
-        highlightColors.put("Green", "#008000");
-        highlightColors.put("Magenta", "#FF00FF");
-        highlightColors.put("Red", "#FF0000");
-        highlightColors.put("Yellow", "#FFFF00");
-        highlightColors.put("White", "#FFFFFF");
-        highlightColors.put("DarkBlue", "#00008B");
-        highlightColors.put("DarkCyan", "#008B8B");
-        highlightColors.put("DarkGreen", "#006400");
-        highlightColors.put("DarkMagenta", "#8B008B");
-        highlightColors.put("DarkRed", "#8B0000");
-        highlightColors.put("DarkYellow", "#FFD700");
-        highlightColors.put("DarkGray", "#A9A9A9");
-        highlightColors.put("LightGray", "#D3D3D3");
+        highlightColors.put("Черный", "#000000");
+        highlightColors.put("Синий", "#0000FF");
+        highlightColors.put("Голубой", "#00FFFF");
+        highlightColors.put("Зеленый", "#008000");
+        highlightColors.put("Пурпурный", "#FF00FF");
+        highlightColors.put("Красный", "#FF0000");
+        highlightColors.put("Желтый", "#FFFF00");
+        highlightColors.put("Белый", "#FFFFFF");
+        highlightColors.put("Темно-синий", "#00008B");
+        highlightColors.put("Темно-голубой", "#008B8B");
+        highlightColors.put("Темно-зеленый", "#006400");
+        highlightColors.put("Темно-пурпурный", "#8B008B");
+        highlightColors.put("Темно-красный", "#8B0000");
+        highlightColors.put("Темно-желтый", "#FFD700");
+        highlightColors.put("Темно-серый", "#A9A9A9");
+        highlightColors.put("Светло-серый", "#D3D3D3");
 
 
         List<String> textColorList = new ArrayList<>(textColors.keySet());
         List<String> highlightColorList = new ArrayList<>(highlightColors.keySet());
         colorComboBox.getItems().addAll(textColorList);
-        colorComboBox.getSelectionModel().select(textColorList.indexOf("Black"));
+        colorComboBox.getSelectionModel().select(textColorList.indexOf("Черный"));
         highlightComboBox.getItems().addAll(highlightColorList);
-        highlightComboBox.getSelectionModel().select(highlightColorList.indexOf("Yellow"));
+        highlightComboBox.getSelectionModel().select(highlightColorList.indexOf("Желтый"));
 
         updateAvailableConfigs();
     }
@@ -364,8 +364,6 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void showHelpButtonPressed() throws IOException {
-        String sep = System.getProperty("file.separator");
-        //SceneManager.showHelp(html);
         SceneManager.showHelp();
     }
 
