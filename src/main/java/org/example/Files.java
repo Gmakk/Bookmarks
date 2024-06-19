@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс для работы с разделами и содержимым документов
+ */
 public class Files {
     protected static Logger log = LoggerFactory.getLogger(Files.class);
 
@@ -32,7 +35,6 @@ public class Files {
     }
 
     public static Body getDocumentBody(WordprocessingMLPackage wordMLPackage){
-
         // Получаем главную часть документа
         MainDocumentPart mainDocumentPart = wordMLPackage.getMainDocumentPart();
 

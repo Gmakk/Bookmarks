@@ -14,7 +14,6 @@ public class Formula {
     public Formula(){
     }
 
-    //TODO: для выпадающего списка посмотреть возможность выводить имеющиеся в бд поля
     //откуда брать данные - ОБЯЗАТЕЛЬНЫЕ поля
     protected String url = null;
     protected String username = null;
@@ -27,16 +26,15 @@ public class Formula {
 
     //сохранять ли старую стилизацию - по умолчанию нет
     protected Boolean saveOldStyle = false;
-
-    //стилизация - по умолчанию нет
+    //Последующие поля записываются в формулу и считываются из нее, только если saveOldStyle = false
+    //стилизация
     protected Boolean isCursive = false;//курсив
     protected Boolean isBald = false;//выделен жирным
     protected Boolean isUnderlined = false;//подчеркивание текста
     protected String highlighting = null;//желтые выделения   "Yellow", etc. "absent" - без выделения
     protected String color = null;//цвет текста  "Red", etc
 
-
-    //шрифты, размеры - ОБЯЗАТЕЛЬНО, если не указано сохранять стилизацию
+    //шрифты, размеры
     protected String font = null;//название шрифта "Times New Roman", etc
     protected Integer fontSize = null;//размер шрифта 12, etc
 
@@ -54,9 +52,9 @@ public class Formula {
 
     public void setDatabaseParams(String url, String username, String password,
                                   String table, String column, String primaryKey, String primaryKeyValue){
+
         if (!table.isBlank() && !column.isBlank() && !primaryKey.isBlank()
                 && !url.isBlank()) {
-
             this.table = table;
             this.column = column;
             this.primaryKey = primaryKey;
@@ -69,6 +67,7 @@ public class Formula {
     }
 
     public void setStyle(Boolean isCursive, Boolean isBald, Boolean isUnderlined, String highlighting, String color){
+
         if(isCursive != null && isUnderlined != null && isBald != null && highlighting != null && color != null) {
             this.isCursive = isCursive;//курсив
             this.isBald = isBald;//выделен жирным
@@ -90,8 +89,8 @@ public class Formula {
      */
     public Boolean checkMandatoryParams(){
         //база данных в любом случае должна быть задана(имя и пароль могут быть пустыми)
-        if(table.isBlank() || column.isBlank() || primaryKey.isBlank()
-                || url.isBlank() || primaryKeyValue.isBlank())
+        if(password == null || username == null || url == null || primaryKey == null || primaryKeyValue == null || column == null || table == null ||
+                table.isBlank() || column.isBlank() || primaryKey.isBlank() || url.isBlank() || primaryKeyValue.isBlank())
             return false;
         //если сохраняется старая стилизация, то необходимо проверить только задание базы данных
         if(saveOldStyle){
@@ -106,7 +105,7 @@ public class Formula {
     }
 
     /**
-     * Метод для проверки того, что для подстановки значения в 2 формулы, нужен один Connection
+     * Метод для проверки того, что для подстановки значения по двум формулам, нужен один Connection
      * @param formula вторая формула
      * @return true - имеет одинаковые параметры, false - нет
      */

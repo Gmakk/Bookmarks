@@ -33,7 +33,6 @@ import org.example.database.config.Properties;
 import org.example.formula.FormulaCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 import static org.example.UI.SceneManager.createNewAlert;
 
@@ -101,14 +100,10 @@ public class MainSceneController implements Initializable {
     private ComboBox<String> fontComboBox;
     @FXML
     private Spinner<Integer> fontSizeSpinner;
-    //форматирование
-    //подстановка
-
 
     /**
      * Вызывается перед показом сцены и заполняет элементы данными
      */
-    //заполнение элементов сцены данными перед показом
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         instance = this;
@@ -191,7 +186,7 @@ public class MainSceneController implements Initializable {
     }
 
     /**
-     * Загружает выбранный документ и выводит все закладки выбранного документа в виде выпадающего списка для последующего выбора
+     * Загружает выбранный документ и выводит все закладки выбранного документа в виде ListView для последующего выбора
      */
     @FXML
     public void showDocBookmarksButtonPressed(){
@@ -211,6 +206,7 @@ public class MainSceneController implements Initializable {
                 return;
             }
 
+            //задаем возможность поиска закладок по именам в специальном поле
             ObservableList<String> observableBookmarkNames
                     = FXCollections.observableArrayList(bookmarkNames);
             FilteredList<String> filteredBookmarkNames = new FilteredList(observableBookmarkNames, p -> true);
@@ -300,7 +296,7 @@ public class MainSceneController implements Initializable {
     }
 
     /**
-     * удаляет подготовленные к внесению документ формулы из списка
+     * Удаляет подготовленные к внесению документ формулы из списка
      */
     @FXML
     public void clearFormulasButtonPressed(){
@@ -309,20 +305,19 @@ public class MainSceneController implements Initializable {
     }
 
     /**
-     * Подставляет в документ значения в соответствии с заданными в нем формулами
+     * Заполняет документ по ранее записанным формулам
      */
     @FXML
     public void  fillInDocumentWithDataButtonPressed(){
         if(wordMLPackage == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
-            alert.showAndWait();
+            createNewAlert(Alert.AlertType.INFORMATION,"","","Необходимо сначала загрузить документ в пункте 2", ButtonType.OK);
             return;
         }
 
         try {
             Body body = Files.getDocumentBody(wordMLPackage);
             //замена текста закладки
-            BookmarksReplaceWithText.replaceBookmarkContents(body.getContent());
+            BookmarksReplaceWithText.replaceBookmarkContent(body.getContent());
             //сохранение документа
             wordMLPackage.save(new File(fileNameLabel.getText()));
             logTextArea.appendText("Документ был сохранен с новым содержимым\n");
@@ -349,7 +344,7 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void closeButtonPressed(){
-        SceneManager.closeMainStage();
+        SceneManager.closePrimaryStage();
     }
 
     @FXML
@@ -367,6 +362,9 @@ public class MainSceneController implements Initializable {
         SceneManager.showHelp();
     }
 
+    /**
+     * При выборе конфигурации из списка, отображает в полях информацию о ней
+     */
     @FXML
     private void configurationSelected() {
         try {

@@ -7,10 +7,12 @@ import java.util.logging.Logger;
 
 public class FormulaCalculator extends Formula {
     private static final Logger log = Logger.getLogger(FormulaCalculator.class.getName());
+
     public FormulaCalculator(){
     }
+
     /**
-     * Метод для вычисления формулы для подстановки закладки
+     * Метод для вычисления формулы на основе полей экземпляра класса
      * @return вычисленная строка
      */
     public String calculate() {
@@ -23,12 +25,12 @@ public class FormulaCalculator extends Formula {
                 try {
                     sb.append(fields[i].getName());
                     sb.append(TITLE_SPLIT);
-                    //логин и пароль кодируются, чтобы не хранить их в открытом виде
+                    //логин и пароль кодируются base64, чтобы не хранить их в открытом виде
                     if(fields[i].getName().equals("username") || fields[i].getName().equals("password")){
                         sb.append(Base64.getEncoder().encodeToString(((String)fields[i].get(this)).getBytes()));
                     }else {
                         sb.append(fields[i].get(this));
-                        //если нужно оставить старую стилизацию
+                        //если нужно оставить старую стилизацию, то остальные поля не учитываем
                         if (fields[i].getName().equals("saveOldStyle") && fields[i].get(this).equals(true))
                             break;
                     }

@@ -1,0 +1,49 @@
+/* Alert styles */
+/* DialogPane styles */
+.dialog-pane {
+    -fx-border-color: #555555;
+    -fx-border-width: 2px;
+    -fx-background-color: #3c3f41;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+/* Customization of the button bar */
+.dialog-pane > .button-bar > .container {
+    -fx-background-color: #3c3f41;
+    -fx-padding: 10px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+/* Customization of DialogPane content label */
+.dialog-pane > .content.label {
+    -fx-padding: 0.5em;
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #dddddd;
+    -fx-font-size: 15px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+/* Customization of buttons */
+.dialog-pane .button {
+    -fx-background-color: #3c3f41;
+    -fx-text-fill: #dddddd;
+    -fx-border-color: #555555;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0.5, 0.0, 0.0);
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: #4e5254;
+    -fx-text-fill: #ffffff;
+}
+
+.dialog-pane .button:pressed{
+    -fx-background-color: #5c5f61;
+}

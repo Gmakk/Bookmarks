@@ -12,12 +12,12 @@ public class Access {
 
 
     /**
-     * Метод для получения объекта Connection необходимого для подстановки в конкретную закладку
+     * Метод для получения объекта Connection по параметрам из формулы
      * @param formula формула, в которой указаны параметры подключения
      * @return Connection соответствующий формуле
+     * @throws SQLException
      */
     public Connection getConnection(Formula formula) throws SQLException {
-        Connection connection;
         //проходимся по существующим Connection
         for(Formula existFormulaConnection : connections.keySet()) {
             //Если находим существующий Connection для этой или аналогичной формулы, возвращаем ее
@@ -25,6 +25,7 @@ public class Access {
                 return connections.get(existFormulaConnection);
         }
         //если нужного Connection нет, то создаем новый
+        Connection connection;
         if(formula.getUsername().isEmpty() || formula.getPassword().isEmpty()){
             connection = DriverManager.getConnection(formula.getUrl());
         }else
@@ -33,6 +34,12 @@ public class Access {
         return connection;
     }
 
+    /**
+     * Метод для получения данных по формуле
+     * @param formula формула с параметрами подключения и источником информации
+     * @return строка, получаемого в результате запроса к бд
+     * @throws SQLException
+     */
     public String getData(Formula formula) throws SQLException {
         //получение connection
         Connection connection = getConnection(formula);

@@ -33,6 +33,7 @@ public class DeleteConfigController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //сцена заполняется доступными конфигами
         try {
             configuration = Configuration.getInstance();
             configsComboBox.getItems().addAll(configuration.getConfigNames());
@@ -43,6 +44,9 @@ public class DeleteConfigController implements Initializable {
         }
     }
 
+    /**
+     * При выборе конфигурации из списка, отображает в полях информацию о ней
+     */
     @FXML
     private void configurationSelected() {
         if (configsComboBox.getValue() != null) {
@@ -61,6 +65,7 @@ public class DeleteConfigController implements Initializable {
                 MainSceneController.getInstance().updateAvailableConfigs();
                 configsComboBox.getItems().clear();
                 configsComboBox.getItems().addAll(configuration.getConfigNames());
+                //тк конфигурация не выбрана, то поля с информацией о ней пустые
                 passwordTextField.setText("");
                 usernameTextField.setText("");
                 urlTextField.setText("");

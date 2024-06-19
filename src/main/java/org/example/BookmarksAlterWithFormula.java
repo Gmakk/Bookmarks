@@ -23,24 +23,22 @@ public class BookmarksAlterWithFormula {
      * Метод для добавления невидимого run с формулой к закладке
      * run добавляется в родительский для закладки параграф
      * @param paragraphs список параграфов документа
-     * @param data  значения имя_закладки - формула
+     * @param data  значения в формате имя_закладки - формула
      */
     public static void alterBookmarkContent(List<Object> paragraphs, Map<DataFieldName, String> data){
 
+        //объект для поиска закладок в содержимом документа
         RangeFinder rt = new RangeFinder();
         new TraversalUtil(paragraphs, rt);
 
         for (CTBookmark bm : rt.getStarts()) {
 
-            //log.info(bm.getName());
-
-            // do we have data for this one?
+            //Проверяется, есть ли формула для подстановки к текущей закладке
             if (bm.getName()==null) continue;
             String value = data.get(new DataFieldName(bm.getName()));
             if (value==null) continue;
 
-            // Can't just remove the object from the parent,
-            // since in the parent, it may be wrapped in a JAXBElement
+            //Поднимаемся на уровень выше и далее среди дочерних элементов ищем начало, конец, их индексы, старую формулу
             List<Object> theList = null;
             if (bm.getParent() instanceof P) {
                 theList = ((ContentAccessor)(bm.getParent())).getContent();
@@ -66,18 +64,18 @@ public class BookmarksAlterWithFormula {
             }
 
 
-            // now add a run, replacing newline characters with BR tags
+            //Задаем run, в которые будем записывать формулу
             org.docx4j.wml.R run;
-            if(existingRun == null)
+            if(existingRun == null)//старой формулы нет
                 run = factory.createR();
-            else {
+            else {//нет необходимости создавать новый элемент
                 run = existingRun;
                 run.getContent().clear();
             }
+            //записываем формулу в run
             RPr rPr = factory.createRPr();
             String[] lines = value.split("\n");
             String lastLine = lines[lines.length - 1];
-
             for (final String line : lines)
             {
                 org.docx4j.wml.Text  t = factory.createText();
@@ -90,10 +88,10 @@ public class BookmarksAlterWithFormula {
                     run.getContent().add(br);
                 }
             }
-
+            //делаем run невидимым
             rPr.setVanish(new BooleanDefaultTrue());
             run.setRPr(rPr);
-
+            //если создавали новый run, записываем его в документ
             if(existingRun == null)
                 theList.add(insertIndex, run);
 

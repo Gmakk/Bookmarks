@@ -14,9 +14,9 @@ import java.util.List;
 public class Configuration {
     private static final Logger log = LoggerFactory.getLogger(Configuration.class);
 
-    private HashMap<String, Properties> configs = new HashMap<>();//таблица название-свойства_подключения
+    private final HashMap<String, Properties> configs = new HashMap<>();//таблица название-свойства_подключения
 
-    private static File configFile = new File(System.getProperty("user.dir") +
+    private static final File configFile = new File(System.getProperty("user.dir") +
             System.getProperty("file.separator") + "app.config");
 
     private static Configuration instance = null;
