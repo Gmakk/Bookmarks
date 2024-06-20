@@ -72,6 +72,7 @@ public class SceneManager {
         if(!additionalStages.containsKey(stageName)) {
             Stage newStage = new Stage();
             newStage.setResizable(false);
+            newStage.getIcons().add(new Image(SceneManager.class.getResource("/pictures/logo32.png").toString()));
             newStage.setTitle(sceneName);
             additionalStages.put(stageName,newStage);
         }
@@ -133,6 +134,7 @@ public class SceneManager {
         helpStage.setMinWidth(600);
         //helpStage.setResizable(false);
         helpStage.setTitle("Справка");
+        helpStage.getIcons().add(new Image(SceneManager.class.getResource("/pictures/logo32.png").toString()));
         helpStage.setScene(helpScene);
         //загружается файл справки для отображения(docx документ конвертирован в html через сторонне приложение)
         URL url = SceneManager.class.getResource("/help.html");
