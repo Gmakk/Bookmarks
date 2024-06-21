@@ -8,14 +8,27 @@ jdbc:postgresql://localhost/bookmarks
 postgres
 G4s7Zd6h2
 
+MySQL
 
 TRUNCATE data_table;
 INSERT INTO data_table values("MySQL_text1",123,"2022-01-01 10:30:00",1),("MySQL_text2",456,"2023-02-02 10:30:00",2),
 ("MySQL_text3",789,"2024-03-03 10:30:00",3),("MySQL_text4",159,"2025-04-04 10:30:00",4);
-SELECt * FROM data_table;
+SELECT * FROM data_table;
 
+PostgreSQL
 
 TRUNCATE data_table;
 INSERT INTO data_table values('PostgreSQL_text1',123,'2022-01-01 10:30:00',1),('PostgreSQL_text2',456,'2023-02-02 10:30:00',2),
 ('PostgreSQL_text3',789,'2024-03-03 10:30:00',3),('PostgreSQL_text4',159,'2025-04-04 10:30:00',4);
+SELECT * FROM data_table;
+
+Derby
+
+SHELL-1:
+java -jar %DERBY_HOME%\lib\derbyrun.jar server start
+SHELL-2:
+ij
+CONNECT 'jdbc:derby://localhost:1527/bookmarks;create=true';
+Create table data_table (id int primary key, column_text varchar(30));
+INSERT INTO data_table values(1, 'Derby_text1'),(2, 'Derby_text2'),(3, 'Derby_text3'),(4, 'Derby_text4');
 SELECT * FROM data_table;

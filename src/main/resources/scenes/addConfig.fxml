@@ -9,10 +9,10 @@
        <Label layoutX="296.0" layoutY="36.0" text="URL" />
        <Label layoutX="296.0" layoutY="98.0" text="Имя пользователя" />
        <Label layoutX="296.0" layoutY="160.0" text="Пароль" />
-       <TextField fx:id="urlTextField" layoutX="296.0" layoutY="61.0" text="jdbc:postgresql://localhost/bookmarks" />
-       <TextField fx:id="usernameTextField" layoutX="296.0" layoutY="123.0" text="postgres" />
-       <TextField fx:id="passwordTextField" layoutX="296.0" layoutY="184.0" text="G4s7Zd6h2" />
-      <TextField fx:id="titleTextField" layoutX="52.0" layoutY="134.0" text="PostgreSQL" />
+       <TextField fx:id="urlTextField" layoutX="296.0" layoutY="61.0" />
+       <TextField fx:id="usernameTextField" layoutX="296.0" layoutY="123.0" />
+       <TextField fx:id="passwordTextField" layoutX="296.0" layoutY="184.0" />
+      <TextField fx:id="titleTextField" layoutX="52.0" layoutY="134.0" />
       <Label layoutX="62.0" layoutY="89.0" text="Название конфигурации" />
    </children>
 </AnchorPane>
